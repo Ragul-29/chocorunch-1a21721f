@@ -48,7 +48,7 @@ function Checkout() {
           <ShoppingBag className="h-12 w-12 text-muted-foreground/40" />
           <h1 className="font-display text-2xl font-bold text-primary">Your cart is empty</h1>
           <p className="text-muted-foreground">Add some crunch before checking out.</p>
-          <Button asChild className="rounded-full">
+          <Button asChild className="btn-3d rounded-full font-bold">
             <Link to="/menu">Browse the menu</Link>
           </Button>
         </main>
@@ -148,7 +148,7 @@ function Checkout() {
                 type="submit"
                 form="checkout-form"
                 size="lg"
-                className="mt-6 w-full rounded-full"
+                className="btn-3d mt-6 w-full rounded-full font-bold"
                 disabled={submitting}
               >
                 {submitting ? "Placing order…" : `Pay ${formatINR(total)}`}
