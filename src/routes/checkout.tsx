@@ -23,7 +23,7 @@ export const Route = createFileRoute("/checkout")({
 const DELIVERY_FEE = 49;
 
 function Checkout() {
-  const { items, subtotal, count, clear } = useCart();
+  const { items, subtotal, count } = useCart();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
 
