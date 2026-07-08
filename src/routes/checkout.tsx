@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Check, Smartphone, CreditCard, Wallet } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -22,22 +22,80 @@ export const Route = createFileRoute("/checkout")({
 
 const DELIVERY_FEE = 49;
 
+// Owner order-desk details — edit these to change where orders land.
+const BUSINESS_WHATSAPP = "918610270207"; // country code + number, no "+"
+const BUSINESS_UPI = "8610270207@upi"; // UPI ID that receives GPay/UPI payments
+const BUSINESS_NAME = "Chocorunch";
+
+type PayMethod = "gpay" | "card" | "cod";
+
+const PAY_METHODS: { id: PayMethod; label: string; hint: string; icon: typeof Smartphone; bg: string }[] = [
+  { id: "gpay", label: "GPay / UPI", hint: "Pay instantly via any UPI app", icon: Smartphone, bg: "var(--mint)" },
+  { id: "card", label: "Card", hint: "Debit / credit card", icon: CreditCard, bg: "var(--sky)" },
+  { id: "cod", label: "Cash on delivery", hint: "Pay when it arrives", icon: Wallet, bg: "var(--caramel)" },
+];
+
 function Checkout() {
-  const { items, subtotal, count } = useCart();
+  const { items, subtotal, count, clear } = useCart();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [method, setMethod] = useState<PayMethod>("gpay");
 
   const total = subtotal + (items.length ? DELIVERY_FEE : 0);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (items.length === 0) return;
+    const form = e.currentTarget;
+    const get = (id: string) =>
+      (form.elements.namedItem(id) as HTMLInputElement | HTMLTextAreaElement | null)?.value.trim() ?? "";
+
+    const name = get("name");
+    const phone = get("phone");
+    const email = get("email");
+    const address = get("address");
+    const city = get("city");
+    const pincode = get("pincode");
+    const notes = get("notes");
+
     setSubmitting(true);
-    // Online payment gets wired up next — this confirms the order details for now.
+
+    const methodLabel = PAY_METHODS.find((m) => m.id === method)?.label ?? method;
+    const lines = items.map(
+      ({ product, qty }) => `• ${product.name} × ${qty} — ${formatINR(product.price * qty)}`,
+    );
+
+    const orderId = `CR${Date.now().toString().slice(-6)}`;
+    const message =
+      `🍫 *New ${BUSINESS_NAME} Order* (${orderId})\n\n` +
+      `*Items:*\n${lines.join("\n")}\n\n` +
+      `Subtotal: ${formatINR(subtotal)}\n` +
+      `Delivery: ${formatINR(DELIVERY_FEE)}\n` +
+      `*Total: ${formatINR(total)}*\n\n` +
+      `*Payment:* ${methodLabel}\n\n` +
+      `*Customer:*\n${name}\n${phone}\n${email}\n\n` +
+      `*Deliver to:*\n${address}\n${city} - ${pincode}` +
+      (notes ? `\n\nNotes: ${notes}` : "");
+
+    const waUrl = `https://wa.me/${BUSINESS_WHATSAPP}?text=${encodeURIComponent(message)}`;
+
+    // For GPay / UPI, kick off the UPI payment intent first.
+    if (method === "gpay") {
+      const upiUrl =
+        `upi://pay?pa=${encodeURIComponent(BUSINESS_UPI)}` +
+        `&pn=${encodeURIComponent(BUSINESS_NAME)}` +
+        `&am=${total}&cu=INR&tn=${encodeURIComponent(`${BUSINESS_NAME} order ${orderId}`)}`;
+      window.location.href = upiUrl;
+    }
+
+    // Send the order straight to the business WhatsApp.
     setTimeout(() => {
+      window.open(waUrl, "_blank", "noopener,noreferrer");
       setSubmitting(false);
-      toast.success("Order details saved! Online payment is being set up next.");
-    }, 600);
+      toast.success("Order sent! Confirm it in WhatsApp to complete.");
+      clear();
+      navigate({ to: "/" });
+    }, method === "gpay" ? 1200 : 400);
   };
 
   if (items.length === 0) {
@@ -110,6 +168,43 @@ function Checkout() {
                 </div>
               </div>
             </section>
+
+            <section className="clay p-6">
+              <h2 className="mb-1 font-display text-xl font-bold">Payment method</h2>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Choose how you&apos;d like to pay. Your order is sent straight to us on WhatsApp.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {PAY_METHODS.map(({ id, label, hint, icon: Icon, bg }) => {
+                  const active = method === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setMethod(id)}
+                      aria-pressed={active}
+                      className={`clay tilt-3d relative flex flex-col items-start gap-2 p-4 text-left ${
+                        active ? "ring-2 ring-primary" : ""
+                      }`}
+                    >
+                      {active && (
+                        <span className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                          <Check className="h-3 w-3" />
+                        </span>
+                      )}
+                      <span
+                        className="flex h-10 w-10 items-center justify-center rounded-xl text-primary shadow-inner"
+                        style={{ backgroundColor: bg }}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span className="font-display font-bold text-foreground">{label}</span>
+                      <span className="text-xs text-muted-foreground">{hint}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
           </form>
 
           {/* Order summary */}
@@ -151,10 +246,16 @@ function Checkout() {
                 className="btn-3d mt-6 w-full rounded-full font-bold"
                 disabled={submitting}
               >
-                {submitting ? "Placing order…" : `Pay ${formatINR(total)}`}
+                {submitting
+                  ? "Sending order…"
+                  : method === "gpay"
+                    ? `Pay ${formatINR(total)} with GPay / UPI`
+                    : method === "card"
+                      ? `Pay ${formatINR(total)}`
+                      : `Place order · ${formatINR(total)}`}
               </Button>
               <p className="mt-3 text-center text-xs text-muted-foreground">
-                Secure online payment · Cash-free checkout
+                Order confirmed instantly on WhatsApp
               </p>
             </div>
           </aside>
