@@ -46,9 +46,9 @@ function Menu() {
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="scene-3d grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((p, i) => (
-            <article key={p.id} className="clay clay-pop group flex flex-col p-5">
+            <article key={p.id} className="clay tilt-3d pop-in group flex flex-col p-5">
               <div
                 className="mb-4 flex aspect-[4/3] items-center justify-center rounded-3xl text-6xl shadow-inner"
                 style={{ backgroundColor: tileColors[i % tileColors.length] }}
