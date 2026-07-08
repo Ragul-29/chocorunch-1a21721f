@@ -102,7 +102,7 @@ export function SiteHeader() {
                     <span>{formatINR(subtotal)}</span>
                   </div>
                   <SheetClose asChild>
-                    <Button asChild size="lg" className="w-full rounded-full">
+                    <Button asChild size="lg" className="btn-3d w-full rounded-full font-bold">
                       <Link to="/checkout">Checkout</Link>
                     </Button>
                   </SheetClose>
