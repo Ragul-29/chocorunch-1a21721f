@@ -38,14 +38,15 @@ function Index() {
             </div>
           </div>
 
-          <div className="relative flex items-center justify-center">
-            <div className="absolute h-72 w-72 rounded-full bg-[var(--sky)] blur-3xl sm:h-96 sm:w-96" />
+          <div className="scene-3d relative flex items-center justify-center">
+            <div className="glow-pulse absolute h-72 w-72 rounded-full bg-[var(--sky)] blur-3xl sm:h-96 sm:w-96" />
+            <div className="spin-slow absolute h-80 w-80 rounded-full border-4 border-dashed border-[var(--peach)]/60 sm:h-[26rem] sm:w-[26rem]" />
             <img
               src={logoAsset.url}
               alt="Chocorunch — Dip & Crunch"
               width={420}
               height={420}
-              className="float-slow relative w-full max-w-sm rounded-full shadow-2xl ring-4 ring-white/70"
+              className="float-3d relative w-full max-w-sm rounded-full shadow-2xl ring-4 ring-white/70"
             />
           </div>
         </div>
@@ -59,7 +60,7 @@ function Index() {
             { icon: ShieldCheck, title: "Secure checkout", text: "Pay online safely with a smooth checkout.", bg: "var(--sky)" },
             { icon: Sparkles, title: "Real ingredients", text: "Made with quality chocolate and crisp.", bg: "var(--caramel)" },
           ].map(({ icon: Icon, title, text, bg }) => (
-            <div key={title} className="clay clay-pop flex items-start gap-3 p-5">
+            <div key={title} className="clay tilt-3d pop-in flex items-start gap-3 p-5">
               <div
                 className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-primary shadow-inner"
                 style={{ backgroundColor: bg }}
