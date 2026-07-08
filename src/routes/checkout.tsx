@@ -46,7 +46,7 @@ function Checkout() {
         <SiteHeader />
         <main className="mx-auto flex max-w-md flex-col items-center gap-4 px-4 py-24 text-center">
           <ShoppingBag className="h-12 w-12 text-muted-foreground/40" />
-          <h1 className="font-display text-2xl font-medium">Your cart is empty</h1>
+          <h1 className="font-display text-2xl font-bold text-primary">Your cart is empty</h1>
           <p className="text-muted-foreground">Add some crunch before checking out.</p>
           <Button asChild className="rounded-full">
             <Link to="/menu">Browse the menu</Link>
@@ -66,13 +66,13 @@ function Checkout() {
         >
           <ArrowLeft className="h-4 w-4" /> Back to menu
         </button>
-        <h1 className="mb-8 font-display text-4xl font-medium tracking-tight">Checkout</h1>
+        <h1 className="mb-8 font-display text-4xl font-extrabold tracking-tight text-primary">Checkout</h1>
 
         <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
           {/* Delivery form */}
           <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6">
-            <section className="rounded-2xl border border-border/60 bg-card p-6">
-              <h2 className="mb-4 font-display text-xl font-medium">Contact</h2>
+            <section className="clay p-6">
+              <h2 className="mb-4 font-display text-xl font-bold">Contact</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full name</Label>
@@ -89,8 +89,8 @@ function Checkout() {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-border/60 bg-card p-6">
-              <h2 className="mb-4 font-display text-xl font-medium">Delivery address</h2>
+            <section className="clay p-6">
+              <h2 className="mb-4 font-display text-xl font-bold">Delivery address</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="address">Address</Label>
@@ -114,8 +114,8 @@ function Checkout() {
 
           {/* Order summary */}
           <aside className="lg:sticky lg:top-24 lg:h-fit">
-            <div className="rounded-2xl border border-border/60 bg-card p-6">
-              <h2 className="mb-4 font-display text-xl font-medium">Order summary</h2>
+            <div className="clay p-6">
+              <h2 className="mb-4 font-display text-xl font-bold">Order summary</h2>
               <div className="space-y-3">
                 {items.map(({ product, qty }) => (
                   <div key={product.id} className="flex items-center justify-between gap-3 text-sm">
