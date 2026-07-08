@@ -93,13 +93,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Order Chocorunch premium crunch chocolate online. Browse the menu, add to cart and get it delivered to your door.",
       },
       { name: "author", content: "Chocorunch" },
-      { property: "og:title", content: "Chocorunch — Handcrafted Crunch Chocolate" },
+      { property: "og:title", content: "Chocorunch — Handcrafted Crunch Chocolate, Delivered" },
       {
         property: "og:description",
-        content: "Premium crunch chocolate, ordered online and delivered to your door.",
+        content: "Order Chocorunch premium crunch chocolate online. Browse the menu, add to cart and get it delivered to your door.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Chocorunch — Handcrafted Crunch Chocolate, Delivered" },
+      { name: "twitter:description", content: "Order Chocorunch premium crunch chocolate online. Browse the menu, add to cart and get it delivered to your door." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cb16e11c-6370-4e1d-9121-51d5be14d969/id-preview-163fbaab--28fb3b05-4cf2-4ffb-abf8-d98083543f7d.lovable.app-1783480078156.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cb16e11c-6370-4e1d-9121-51d5be14d969/id-preview-163fbaab--28fb3b05-4cf2-4ffb-abf8-d98083543f7d.lovable.app-1783480078156.png" },
     ],
     links: [
       {
