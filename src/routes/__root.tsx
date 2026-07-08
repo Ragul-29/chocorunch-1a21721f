@@ -13,12 +13,13 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart";
 import { Toaster } from "../components/ui/sonner";
-import "@fontsource/fraunces/400.css";
-import "@fontsource/fraunces/500.css";
-import "@fontsource/fraunces/600.css";
-import "@fontsource/figtree/400.css";
-import "@fontsource/figtree/500.css";
-import "@fontsource/figtree/600.css";
+import "@fontsource/baloo-2/500.css";
+import "@fontsource/baloo-2/600.css";
+import "@fontsource/baloo-2/700.css";
+import "@fontsource/baloo-2/800.css";
+import "@fontsource/nunito/400.css";
+import "@fontsource/nunito/600.css";
+import "@fontsource/nunito/700.css";
 
 function NotFoundComponent() {
   return (
@@ -105,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,

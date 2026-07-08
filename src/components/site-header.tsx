@@ -12,16 +12,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
-import logo from "@/assets/chocorunch-logo.png";
+import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
 export function SiteHeader() {
   const { items, count, subtotal, setQty, remove } = useCart();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Chocorunch" className="h-8 w-auto" width={160} height={40} />
+        <Link to="/" className="flex items-center gap-2.5">
+          <img
+            src={logoAsset.url}
+            alt="Chocorunch"
+            className="h-11 w-11 rounded-full object-cover shadow-md ring-2 ring-white/70"
+            width={44}
+            height={44}
+          />
+          <span className="font-display text-2xl font-extrabold tracking-tight text-primary">
+            Chocorunch
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium sm:flex">
@@ -35,11 +44,11 @@ export function SiteHeader() {
 
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" className="relative gap-2 rounded-full">
+            <Button size="sm" className="btn-3d relative gap-2 rounded-full font-bold">
               <ShoppingBag className="h-4 w-4" />
               <span className="hidden sm:inline">Cart</span>
               {count > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-semibold text-primary-foreground">
+                <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--pink)] px-1 text-[11px] font-bold text-primary shadow">
                   {count}
                 </span>
               )}
@@ -93,7 +102,7 @@ export function SiteHeader() {
                     <span>{formatINR(subtotal)}</span>
                   </div>
                   <SheetClose asChild>
-                    <Button asChild size="lg" className="w-full rounded-full">
+                    <Button asChild size="lg" className="btn-3d w-full rounded-full font-bold">
                       <Link to="/checkout">Checkout</Link>
                     </Button>
                   </SheetClose>
