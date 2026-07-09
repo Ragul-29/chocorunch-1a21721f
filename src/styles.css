@@ -279,3 +279,22 @@
     pointer-events: none;
   }
 }
+
+/* Step-by-step builder: each step flips into place in 3D space */
+@keyframes step-flip {
+  0%   { opacity: 0; transform: perspective(1200px) rotateY(35deg) translateZ(-120px) scale(0.92); }
+  100% { opacity: 1; transform: perspective(1200px) rotateY(0deg) translateZ(0) scale(1); }
+}
+@utility step-flip {
+  animation: step-flip 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+/* Chunky selectable chip that presses in like a physical button */
+@utility chip-3d {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 0 0 color-mix(in oklab, var(--foreground) 12%, transparent);
+  &:hover { transform: translateY(-2px); box-shadow: 0 6px 0 0 color-mix(in oklab, var(--foreground) 14%, transparent); }
+  &:active { transform: translateY(3px); box-shadow: 0 1px 0 0 color-mix(in oklab, var(--foreground) 12%, transparent); }
+}

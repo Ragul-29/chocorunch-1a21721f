@@ -62,7 +62,9 @@ function Checkout() {
 
     const methodLabel = PAY_METHODS.find((m) => m.id === method)?.label ?? method;
     const lines = items.map(
-      ({ product, qty }) => `• ${product.name} × ${qty} — ${formatINR(product.price * qty)}`,
+      ({ product, qty }) =>
+        `• ${product.name} × ${qty} — ${formatINR(product.price * qty)}` +
+        (product.description ? `\n   ↳ ${product.description}` : ""),
     );
 
     const orderId = `CR${Date.now().toString().slice(-6)}`;
