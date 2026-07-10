@@ -82,6 +82,9 @@ function Menu() {
                       </span>
                     ))}
                   </div>
+                  <p className="mt-2 font-display text-lg font-extrabold text-primary">
+                    {formatINR(m.price)}
+                  </p>
                 </div>
                 <Button
                   className="btn-3d shrink-0 gap-1 rounded-full font-bold"
@@ -129,11 +132,12 @@ function Menu() {
                 <ul className="mb-4 space-y-1.5 text-sm font-medium text-primary">
                   <li>✓ Choose any {b.mainCount} main items</li>
                   <li>✓ Choose 1 chocolate dip</li>
-                  <li>✓ Up to {b.toppingCount} toppings included</li>
+                  <li>✓ Add up to {b.toppingCount} toppings</li>
                 </ul>
                 <div className="mt-auto flex items-center justify-between pt-2">
                   <span className="font-display text-2xl font-extrabold text-primary">
                     {formatINR(b.price)}
+                    <span className="ml-1 text-sm font-bold text-primary/70">+ toppings</span>
                   </span>
                   <Button
                     className="btn-3d gap-1 rounded-full font-bold"
@@ -169,7 +173,7 @@ function Menu() {
                 className="rounded-full px-3 py-1.5 text-sm font-bold text-foreground shadow-sm"
                 style={{ backgroundColor: t.color }}
               >
-                {t.emoji} {t.name}
+                {t.emoji} {t.name} · {formatINR(t.price)}
               </span>
             ))}
           </div>
