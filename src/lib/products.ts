@@ -34,10 +34,8 @@ export const dips: Choice[] = [
 export const mainItems: MainItem[] = [
   { id: "wafer-biscuit", name: "Wafer Biscuit", emoji: "🧇", color: "var(--caramel)", price: 99 },
   { id: "wafer-stick", name: "Wafer Stick", emoji: "🥖", color: "var(--peach)", price: 129, tag: "Hero Product" },
-  { id: "mini-cookies", name: "Mini Cookies", emoji: "🍪", color: "var(--mint)", price: 50 },
-  { id: "toy-cookies", name: "Toy Shape Cookies", emoji: "🧸", color: "var(--sky)", price: 55 },
-  { id: "homemade-cookies", name: "Homemade Cookies", emoji: "🥮", color: "var(--pink)", price: 50 },
-  { id: "biscoff", name: "Biscoff", emoji: "🍪", color: "var(--caramel)", price: 65 },
+  { id: "brownie-mousse", name: "Brownie Mousse", emoji: "🍰", color: "var(--sky)", price: 159, tag: "New" },
+  { id: "wafer-pops", name: "Wafer Pops", emoji: "🍭", color: "var(--mint)", price: 59, tag: "New" },
 ];
 
 export const toppings: Topping[] = [
