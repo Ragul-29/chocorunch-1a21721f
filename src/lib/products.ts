@@ -22,6 +22,9 @@ export type Choice = {
 // Main items you can pick individually or inside a build-your-own box.
 export type MainItem = Choice & { price: number; tag?: string };
 
+// Toppings carry an add-on price.
+export type Topping = Choice & { price: number };
+
 export const dips: Choice[] = [
   { id: "hazelnut", name: "Hazelnut", emoji: "🌰", color: "var(--caramel)" },
   { id: "milk", name: "Milk Chocolate", emoji: "🍫", color: "var(--peach)" },
@@ -29,23 +32,22 @@ export const dips: Choice[] = [
 ];
 
 export const mainItems: MainItem[] = [
-  { id: "wafer-biscuit", name: "Wafer Biscuit", emoji: "🧇", color: "var(--caramel)", price: 60 },
-  { id: "wafer-stick", name: "Wafer Stick", emoji: "🍡", color: "var(--peach)", price: 70, tag: "Hero Product" },
+  { id: "wafer-biscuit", name: "Wafer Biscuit", emoji: "🧇", color: "var(--caramel)", price: 99 },
+  { id: "wafer-stick", name: "Wafer Stick", emoji: "🥖", color: "var(--peach)", price: 129, tag: "Hero Product" },
   { id: "mini-cookies", name: "Mini Cookies", emoji: "🍪", color: "var(--mint)", price: 50 },
   { id: "toy-cookies", name: "Toy Shape Cookies", emoji: "🧸", color: "var(--sky)", price: 55 },
   { id: "homemade-cookies", name: "Homemade Cookies", emoji: "🥮", color: "var(--pink)", price: 50 },
-  { id: "caramel-cookies", name: "Caramel Crunch Cookies", emoji: "🍯", color: "var(--caramel)", price: 65 },
+  { id: "biscoff", name: "Biscoff", emoji: "🍪", color: "var(--caramel)", price: 65 },
 ];
 
-export const toppings: Choice[] = [
-  { id: "gems", name: "Gems", emoji: "🔵", color: "var(--sky)" },
-  { id: "brownie", name: "Brownie Crumble", emoji: "🟤", color: "var(--caramel)" },
-  { id: "glaze-cake", name: "Chocolate Glaze Cake", emoji: "🍰", color: "var(--muted)" },
-  { id: "moon-star", name: "Moon & Star Cereal", emoji: "🌙", color: "var(--sky)" },
-  { id: "filled-cereal", name: "Chocolate-Filled Cereal", emoji: "🥣", color: "var(--muted)" },
-  { id: "homemade-crunch", name: "Homemade Crunch", emoji: "🌾", color: "var(--peach)" },
-  { id: "choco-chips", name: "Chocolate Chips", emoji: "🍫", color: "var(--muted)" },
-  { id: "sprinkles", name: "Color Sprinkles", emoji: "🌈", color: "var(--pink)" },
+export const toppings: Topping[] = [
+  { id: "gems", name: "Gems", emoji: "💎", color: "var(--sky)", price: 5 },
+  { id: "brownie", name: "Brownie Crumble", emoji: "🟤", color: "var(--caramel)", price: 20 },
+  { id: "glaze-cake", name: "Chocolate Glaze Cake", emoji: "🍰", color: "var(--muted)", price: 15 },
+  { id: "moon-star", name: "Moon & Star Cereal", emoji: "🌙", color: "var(--sky)", price: 10 },
+  { id: "filled-cereal", name: "Chocolate-Filled Cereal", emoji: "🥣", color: "var(--muted)", price: 15 },
+  { id: "choco-chips", name: "Chocolate Chips", emoji: "🍫", color: "var(--muted)", price: 10 },
+  { id: "sprinkles", name: "Colour Sprinkles", emoji: "🌈", color: "var(--pink)", price: 10 },
 ];
 
 // Build-your-own box tiers.
@@ -61,9 +63,9 @@ export type BoxTier = {
 };
 
 export const boxTiers: BoxTier[] = [
-  { id: "mini-box", name: "Mini Box", emoji: "🟢", badge: "Best for single person", color: "var(--mint)", mainCount: 2, toppingCount: 3, price: 199 },
-  { id: "family-box", name: "Family Box", emoji: "🟠", badge: "Best for sharing", color: "var(--peach)", mainCount: 3, toppingCount: 5, price: 349 },
-  { id: "premium-box", name: "Premium Box", emoji: "👑", badge: "Gift / Party Box", color: "var(--pink)", mainCount: 5, toppingCount: 7, price: 599 },
+  { id: "mini-box", name: "Mini Box", emoji: "🟢", badge: "Best for single person", color: "var(--mint)", mainCount: 2, toppingCount: 3, price: 149 },
+  { id: "family-box", name: "Family Box", emoji: "🟠", badge: "Best for sharing", color: "var(--peach)", mainCount: 3, toppingCount: 5, price: 219 },
+  { id: "premium-box", name: "Premium Box", emoji: "👑", badge: "Gift / Party Box", color: "var(--pink)", mainCount: 5, toppingCount: 7, price: 309 },
 ];
 
 export const formatINR = (amount: number) =>
