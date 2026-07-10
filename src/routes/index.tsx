@@ -16,7 +16,19 @@ function Index() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
-          <div className="flex flex-col items-start gap-6">
+          <div className="scene-3d relative order-1 flex items-center justify-center">
+            <div className="glow-pulse absolute h-72 w-72 rounded-full bg-[var(--sky)] blur-3xl sm:h-96 sm:w-96" />
+            <div className="spin-slow absolute h-80 w-80 rounded-full border-4 border-dashed border-[var(--peach)]/60 sm:h-[26rem] sm:w-[26rem]" />
+            <img
+              src={logoAsset.url}
+              alt="Chocorunch — Dip & Crunch"
+              width={420}
+              height={420}
+              className="float-3d relative w-full max-w-sm rounded-full shadow-2xl ring-4 ring-white/70"
+            />
+          </div>
+
+          <div className="order-2 flex flex-col items-start gap-6">
             <span className="inline-flex items-center gap-2 rounded-full bg-[var(--mint)] px-4 py-1.5 text-sm font-bold text-secondary-foreground shadow-sm">
               <Sparkles className="h-4 w-4" /> Dip &amp; Crunch, delivered!
             </span>
@@ -36,18 +48,6 @@ function Index() {
                 </Link>
               </Button>
             </div>
-          </div>
-
-          <div className="scene-3d relative flex items-center justify-center">
-            <div className="glow-pulse absolute h-72 w-72 rounded-full bg-[var(--sky)] blur-3xl sm:h-96 sm:w-96" />
-            <div className="spin-slow absolute h-80 w-80 rounded-full border-4 border-dashed border-[var(--peach)]/60 sm:h-[26rem] sm:w-[26rem]" />
-            <img
-              src={logoAsset.url}
-              alt="Chocorunch — Dip & Crunch"
-              width={420}
-              height={420}
-              className="float-3d relative w-full max-w-sm rounded-full shadow-2xl ring-4 ring-white/70"
-            />
           </div>
         </div>
       </section>

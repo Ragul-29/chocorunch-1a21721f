@@ -18,6 +18,7 @@ import {
   type Choice,
   type MainItem,
   type Product,
+  type Topping,
 } from "@/lib/products";
 
 export type BuilderConfig = {
@@ -55,7 +56,7 @@ export function BoxBuilder({
   const [step, setStep] = useState(0);
   const [mains, setMains] = useState<MainItem[]>([]);
   const [dip, setDip] = useState<Choice | null>(null);
-  const [tops, setTops] = useState<Choice[]>([]);
+  const [tops, setTops] = useState<Topping[]>([]);
 
   const steps = useMemo<StepKind[]>(() => {
     if (!config) return [];
@@ -84,6 +85,9 @@ export function BoxBuilder({
   const current = steps[step];
   const isLast = step === steps.length - 1;
 
+  const toppingTotal = tops.reduce((sum, t) => sum + t.price, 0);
+  const total = config.basePrice + toppingTotal;
+
   const canAdvance = (() => {
     switch (current) {
       case "mains":
@@ -109,7 +113,7 @@ export function BoxBuilder({
       id: `${config.id}-${Date.now()}`,
       name: config.title,
       description: parts.join(" · "),
-      price: config.basePrice,
+      price: total,
       emoji: config.emoji,
     };
     add(product);
@@ -238,6 +242,7 @@ export function BoxBuilder({
                       )}
                       <span className="text-2xl">{t.emoji}</span>
                       <span className="text-[11px] font-bold leading-tight text-foreground">{t.name}</span>
+                      <span className="text-[10px] font-bold text-primary">+{formatINR(t.price)}</span>
                     </button>
                   );
                 })}
@@ -269,12 +274,15 @@ export function BoxBuilder({
                 <div>
                   <p className="text-xs font-bold uppercase text-muted-foreground">Toppings</p>
                   <p className="font-medium">{tops.map((t) => t.name).join(", ")}</p>
+                  <p className="text-sm font-semibold text-muted-foreground">
+                    Toppings add-on: +{formatINR(toppingTotal)}
+                  </p>
                 </div>
               )}
               <div className="flex items-center justify-between border-t border-border pt-3">
                 <span className="font-display text-lg font-bold">Total</span>
                 <span className="font-display text-2xl font-extrabold text-primary">
-                  {formatINR(config.basePrice)}
+                  {formatINR(total)}
                 </span>
               </div>
             </div>
@@ -292,7 +300,7 @@ export function BoxBuilder({
           </Button>
           {isLast ? (
             <Button className="btn-3d rounded-full font-bold" onClick={finish}>
-              <Sparkles className="h-4 w-4" /> Add to cart · {formatINR(config.basePrice)}
+              <Sparkles className="h-4 w-4" /> Add to cart · {formatINR(total)}
             </Button>
           ) : (
             <Button
