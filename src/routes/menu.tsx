@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BoxBuilder, type BuilderConfig } from "@/components/box-builder";
-import { useCart } from "@/lib/cart";
 import { dips, mainItems, boxTiers, formatINR } from "@/lib/products";
 
 export const Route = createFileRoute("/menu")({
@@ -24,7 +23,6 @@ export const Route = createFileRoute("/menu")({
 });
 
 function Menu() {
-  const { add } = useCart();
   const [config, setConfig] = useState<BuilderConfig | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -74,18 +72,16 @@ function Menu() {
                       </Badge>
                     )}
                   </div>
-                  {m.id !== "brownie-mousse" && (
-                    <div className="mt-1.5 flex flex-wrap gap-1.5">
-                      {dips.map((d) => (
-                        <span
-                          key={d.id}
-                          className="rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-semibold text-muted-foreground"
-                        >
-                          {d.emoji} {d.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {dips.map((d) => (
+                      <span
+                        key={d.id}
+                        className="rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-semibold text-muted-foreground"
+                      >
+                        {d.emoji} {d.name}
+                      </span>
+                    ))}
+                  </div>
                   <p className="mt-2 font-display text-lg font-extrabold text-primary">
                     {formatINR(m.price)}
                   </p>
@@ -93,26 +89,18 @@ function Menu() {
                 <Button
                   className="btn-3d shrink-0 gap-1 rounded-full font-bold"
                   onClick={() =>
-                    m.id === "brownie-mousse"
-                      ? add({
-                          id: m.id,
-                          name: m.name,
-                          description: "No dip needed",
-                          price: m.price,
-                          emoji: m.emoji,
-                        })
-                      : launch({
-                          id: m.id,
-                          title: m.name,
-                          emoji: m.emoji,
-                          basePrice: m.price,
-                          mainCount: 0,
-                          fixedMainId: m.id,
-                          toppingCount: 0,
-                        })
+                    launch({
+                      id: m.id,
+                      title: m.name,
+                      emoji: m.emoji,
+                      basePrice: m.price,
+                      mainCount: 0,
+                      fixedMainId: m.id,
+                      toppingCount: 0,
+                    })
                   }
                 >
-                  {m.id === "brownie-mousse" ? "Add to cart" : "Choose 1 Dip"}
+                  Choose 1 Dip
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </article>
