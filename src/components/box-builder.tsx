@@ -165,7 +165,7 @@ export function BoxBuilder({
         <div key={step} className="step-flip scene-3d min-h-[16rem] py-2">
           {current === "mains" && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {mainItems.filter((m) => m.inBox !== false).map((m) => {
+              {mainItems.filter((m) => (config.id === "mini-box" ? m.inBox !== false : true)).map((m) => {
                 const active = mains.some((x) => x.id === m.id);
                 return (
                   <button
