@@ -63,7 +63,7 @@ export type BoxTier = {
 export const boxTiers: BoxTier[] = [
   { id: "mini-box", name: "Mini Box", emoji: "🟢", badge: "Best for single person", color: "var(--mint)", mainCount: 2, toppingCount: 3, price: 119 },
   { id: "family-box", name: "Family Box", emoji: "🟠", badge: "Best for sharing", color: "var(--peach)", mainCount: 3, toppingCount: 5, price: 159 },
-  { id: "premium-box", name: "Premium Box", emoji: "👑", badge: "Gift / Party Box", color: "var(--pink)", mainCount: 5, toppingCount: 7, price: 179 },
+  { id: "premium-box", name: "Premium Box", emoji: "👑", badge: "Gift / Party Box", color: "var(--pink)", mainCount: 5, toppingCount: 7, price: 199 },
 ];
 
 export const formatINR = (amount: number) =>
