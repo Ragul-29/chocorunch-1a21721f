@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronRight, Award, Gift, Palette } from "lucide-react";
+import { ChevronRight, Award, Gift } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BoxBuilder, type BuilderConfig } from "@/components/box-builder";
-import { dips, mainItems, toppings, boxTiers, formatINR } from "@/lib/products";
+import { useCart } from "@/lib/cart";
+import { dips, mainItems, boxTiers, formatINR } from "@/lib/products";
 
 export const Route = createFileRoute("/menu")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/menu")({
 });
 
 function Menu() {
+  const { add } = useCart();
   const [config, setConfig] = useState<BuilderConfig | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -72,16 +74,18 @@ function Menu() {
                       </Badge>
                     )}
                   </div>
-                  <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {dips.map((d) => (
-                      <span
-                        key={d.id}
-                        className="rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-semibold text-muted-foreground"
-                      >
-                        {d.emoji} {d.name}
-                      </span>
-                    ))}
-                  </div>
+                  {m.id !== "brownie-mousse" && (
+                    <div className="mt-1.5 flex flex-wrap gap-1.5">
+                      {dips.map((d) => (
+                        <span
+                          key={d.id}
+                          className="rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-semibold text-muted-foreground"
+                        >
+                          {d.emoji} {d.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   <p className="mt-2 font-display text-lg font-extrabold text-primary">
                     {formatINR(m.price)}
                   </p>
@@ -89,18 +93,27 @@ function Menu() {
                 <Button
                   className="btn-3d shrink-0 gap-1 rounded-full font-bold"
                   onClick={() =>
-                    launch({
-                      id: m.id,
-                      title: m.name,
-                      emoji: m.emoji,
-                      basePrice: m.price,
-                      mainCount: 0,
-                      fixedMainId: m.id,
-                      toppingCount: 0,
-                    })
+                    m.id === "brownie-mousse"
+                      ? add({
+                          id: m.id,
+                          name: m.name,
+                          description: "No dip needed",
+                          price: m.price,
+                          emoji: m.emoji,
+                        })
+                      : launch({
+                          id: m.id,
+                          title: m.name,
+                          emoji: m.emoji,
+                          basePrice: m.price,
+                          mainCount: 0,
+                          fixedMainId: m.id,
+                          toppingCount: 0,
+                        })
                   }
                 >
-                  Choose 1 Dip <ChevronRight className="h-4 w-4" />
+                  {m.id === "brownie-mousse" ? "Add to cart" : "Choose 1 Dip"}
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
               </article>
             ))}
@@ -160,24 +173,6 @@ function Menu() {
           </div>
         </section>
 
-        {/* ---- Topping Options ---- */}
-        <section>
-          <div className="mb-4 flex items-center gap-2">
-            <Palette className="h-6 w-6 text-primary" />
-            <h2 className="font-display text-2xl font-extrabold text-foreground">Topping Options</h2>
-          </div>
-          <div className="clay flex flex-wrap gap-2 p-5">
-            {toppings.map((t) => (
-              <span
-                key={t.id}
-                className="rounded-full px-3 py-1.5 text-sm font-bold text-foreground shadow-sm"
-                style={{ backgroundColor: t.color }}
-              >
-                {t.emoji} {t.name} · {formatINR(t.price)}
-              </span>
-            ))}
-          </div>
-        </section>
       </main>
 
       <BoxBuilder config={config} open={open} onOpenChange={setOpen} />
