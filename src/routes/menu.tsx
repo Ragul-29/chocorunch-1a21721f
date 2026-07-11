@@ -24,6 +24,7 @@ export const Route = createFileRoute("/menu")({
 });
 
 function Menu() {
+  const { add } = useCart();
   const [config, setConfig] = useState<BuilderConfig | null>(null);
   const [open, setOpen] = useState(false);
 
