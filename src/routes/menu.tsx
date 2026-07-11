@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BoxBuilder, type BuilderConfig } from "@/components/box-builder";
-import { useCart } from "@/lib/cart";
 import { dips, mainItems, boxTiers, formatINR } from "@/lib/products";
 
 export const Route = createFileRoute("/menu")({
@@ -24,7 +23,6 @@ export const Route = createFileRoute("/menu")({
 });
 
 function Menu() {
-  const { add } = useCart();
   const [config, setConfig] = useState<BuilderConfig | null>(null);
   const [open, setOpen] = useState(false);
 
