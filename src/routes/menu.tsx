@@ -162,24 +162,6 @@ function Menu() {
           </div>
         </section>
 
-        {/* ---- Topping Options ---- */}
-        <section>
-          <div className="mb-4 flex items-center gap-2">
-            <Palette className="h-6 w-6 text-primary" />
-            <h2 className="font-display text-2xl font-extrabold text-foreground">Topping Options</h2>
-          </div>
-          <div className="clay flex flex-wrap gap-2 p-5">
-            {toppings.map((t) => (
-              <span
-                key={t.id}
-                className="rounded-full px-3 py-1.5 text-sm font-bold text-foreground shadow-sm"
-                style={{ backgroundColor: t.color }}
-              >
-                {t.emoji} {t.name} · {formatINR(t.price)}
-              </span>
-            ))}
-          </div>
-        </section>
       </main>
 
       <BoxBuilder config={config} open={open} onOpenChange={setOpen} />
