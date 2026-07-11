@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronRight, Award, Gift, Palette } from "lucide-react";
+import { ChevronRight, Award, Gift } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BoxBuilder, type BuilderConfig } from "@/components/box-builder";
-import { dips, mainItems, toppings, boxTiers, formatINR } from "@/lib/products";
+import { useCart } from "@/lib/cart";
+import { dips, mainItems, boxTiers, formatINR } from "@/lib/products";
 
 export const Route = createFileRoute("/menu")({
   head: () => ({
