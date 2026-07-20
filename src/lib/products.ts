@@ -20,7 +20,7 @@ export type Choice = {
 };
 
 // Main items you can pick individually or inside a build-your-own box.
-export type MainItem = Choice & { price: number; tag?: string; inBox?: boolean };
+export type MainItem = Choice & { price: number; tag?: string; inBox?: boolean; inMenu?: boolean };
 
 // Toppings carry an add-on price.
 export type Topping = Choice & { price: number };
@@ -32,8 +32,8 @@ export const dips: Choice[] = [
 ];
 
 export const mainItems: MainItem[] = [
-  { id: "wafer-biscuit", name: "Wafer Biscuit", emoji: "🧇", color: "var(--caramel)", price: 99 },
-  { id: "wafer-stick", name: "Wafer Stick", emoji: "🥖", color: "var(--peach)", price: 129, tag: "Hero Product" },
+  { id: "wafer-biscuit", name: "Wafer Biscuit", emoji: "🧇", color: "var(--caramel)", price: 99, inMenu: false },
+  { id: "wafer-stick", name: "Wafer Stick", emoji: "🥖", color: "var(--peach)", price: 129, tag: "Hero Product", inMenu: false },
   { id: "brownie-mousse", name: "Brownie Mousse", emoji: "🍮", color: "var(--sky)", price: 159, tag: "New", inBox: false },
   { id: "wafer-pops", name: "Wafer Pops", emoji: "🍭", color: "var(--mint)", price: 59, tag: "New", inBox: false },
   { id: "mini-cookies", name: "Mini Cookies", emoji: "🍪", color: "var(--caramel)", price: 49, tag: "New", inBox: false },

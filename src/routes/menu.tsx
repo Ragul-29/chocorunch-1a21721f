@@ -52,7 +52,7 @@ function Menu() {
             <h2 className="font-display text-2xl font-extrabold text-foreground">Main Products</h2>
           </div>
           <div className="scene-3d grid gap-4 sm:grid-cols-2">
-            {mainItems.map((m) => (
+            {mainItems.filter((m) => m.inMenu !== false).map((m) => (
               <article
                 key={m.id}
                 className="clay tilt-3d pop-in flex items-center gap-4 p-5"
