@@ -43,6 +43,15 @@ export const mainItems: MainItem[] = [
   { id: "caramel-crunch-cookies", name: "Caramel Crunch Cookies", emoji: "🍪", color: "var(--caramel)", price: 69, tag: "New", inBox: false },
 ];
 
+// Items that appear only inside the Mini Box builder, not on the main menu.
+export const miniBoxItems: MainItem[] = [
+  { id: "mini-wafer-biscuit", name: "Mini Wafer Biscuit", emoji: "🧇", color: "var(--caramel)", price: 89 },
+  { id: "mini-wafer-stick", name: "Mini Wafer Stick", emoji: "🥖", color: "var(--peach)", price: 119 },
+  { id: "mini-brownie", name: "Mini Brownie Mousse", emoji: "🍮", color: "var(--sky)", price: 129 },
+  { id: "mini-wafer-pops", name: "Mini Wafer Pops", emoji: "🍭", color: "var(--mint)", price: 49 },
+  { id: "mini-cookie-mix", name: "Mini Cookie Mix", emoji: "🍪", color: "var(--pink)", price: 59 },
+];
+
 export const toppings: Topping[] = [
   { id: "gems", name: "Gems", emoji: "💎", color: "var(--sky)", price: 5 },
   { id: "brownie", name: "Brownie Crumble", emoji: "🟤", color: "var(--caramel)", price: 20 },
