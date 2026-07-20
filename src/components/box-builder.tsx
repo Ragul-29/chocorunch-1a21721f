@@ -13,6 +13,7 @@ import { useCart } from "@/lib/cart";
 import {
   dips,
   mainItems,
+  miniBoxItems,
   toppings,
   formatINR,
   type Choice,
