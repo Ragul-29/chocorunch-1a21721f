@@ -13,6 +13,7 @@ import { useCart } from "@/lib/cart";
 import {
   dips,
   mainItems,
+  miniBoxItems,
   toppings,
   formatINR,
   type Choice,
@@ -165,7 +166,7 @@ export function BoxBuilder({
         <div key={step} className="step-flip scene-3d min-h-[16rem] py-2">
           {current === "mains" && (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {mainItems.filter((m) => (config.id === "mini-box" ? m.inBox !== false : true)).map((m) => {
+              {(config.id === "mini-box" ? miniBoxItems : mainItems.filter((m) => m.inBox !== false)).map((m) => {
                 const active = mains.some((x) => x.id === m.id);
                 return (
                   <button
