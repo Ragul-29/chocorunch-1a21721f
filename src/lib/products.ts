@@ -36,6 +36,11 @@ export const mainItems: MainItem[] = [
   { id: "wafer-stick", name: "Wafer Stick", emoji: "🥖", color: "var(--peach)", price: 129, tag: "Hero Product" },
   { id: "brownie-mousse", name: "Brownie Mousse", emoji: "🍮", color: "var(--sky)", price: 159, tag: "New", inBox: false },
   { id: "wafer-pops", name: "Wafer Pops", emoji: "🍭", color: "var(--mint)", price: 59, tag: "New", inBox: false },
+  { id: "mini-cookies", name: "Mini Cookies", emoji: "🍪", color: "var(--caramel)", price: 49, tag: "New" },
+  { id: "toy-cookies", name: "Toy Shape Cookies", emoji: "🧸", color: "var(--pink)", price: 59, tag: "New" },
+  { id: "nuts-cookies", name: "Nuts Cookies", emoji: "🥜", color: "var(--peach)", price: 69, tag: "New" },
+  { id: "chocolate-cookies", name: "Chocolate Cookies", emoji: "🍫", color: "var(--muted)", price: 59, tag: "New" },
+  { id: "caramel-crunch-cookies", name: "Caramel Crunch Cookies", emoji: "🍪", color: "var(--caramel)", price: 69, tag: "New" },
 ];
 
 export const toppings: Topping[] = [
