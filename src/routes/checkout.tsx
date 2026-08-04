@@ -240,6 +240,21 @@ function Checkout() {
                   <span>Subtotal ({count} items)</span>
                   <span>{formatINR(subtotal)}</span>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between font-semibold text-primary">
+                    <span>
+                      Spin &amp; Win reward
+                      {voucher && prize?.id !== "next40" ? " + voucher" : ""}
+                    </span>
+                    <span>-{formatINR(discount)}</span>
+                  </div>
+                )}
+                {freebies && (
+                  <div className="flex justify-between font-semibold text-primary">
+                    <span>{prize?.emoji} {freebies}</span>
+                    <span>FREE</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-muted-foreground">
                   <span>Delivery</span>
                   <span>{formatINR(DELIVERY_FEE)}</span>
