@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BoxBuilder, type BuilderConfig } from "@/components/box-builder";
+import { SpinWheelCard } from "@/components/spin-wheel";
 import { dips, mainItems, boxTiers, formatINR } from "@/lib/products";
 
 export const Route = createFileRoute("/menu")({
@@ -46,6 +47,8 @@ function Menu() {
         </div>
 
         {/* ---- Main Products ---- */}
+        <SpinWheelCard />
+
         <section className="mb-12">
           <div className="mb-4 flex items-center gap-2">
             <Award className="h-6 w-6 text-primary" />

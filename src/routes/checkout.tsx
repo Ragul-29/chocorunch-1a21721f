@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
+import { useReward } from "@/lib/reward";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -37,11 +38,14 @@ const PAY_METHODS: { id: PayMethod; label: string; hint: string; icon: typeof Sm
 
 function Checkout() {
   const { items, subtotal, count, clear } = useCart();
+  const { prize, voucher, discountFor, rewardLines, consumeForOrder } = useReward();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<PayMethod>("gpay");
 
-  const total = subtotal + (items.length ? DELIVERY_FEE : 0);
+  const discount = discountFor(subtotal);
+  const total = Math.max(0, subtotal - discount) + (items.length ? DELIVERY_FEE : 0);
+  const freebies = prize && (prize.id === "dip" || prize.id === "oreo") ? prize.label : null;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,12 +72,15 @@ function Checkout() {
     );
 
     const orderId = `CR${Date.now().toString().slice(-6)}`;
+    const rewards = rewardLines(subtotal);
     const message =
       `🍫 *New ${BUSINESS_NAME} Order* (${orderId})\n\n` +
       `*Items:*\n${lines.join("\n")}\n\n` +
       `Subtotal: ${formatINR(subtotal)}\n` +
+      (discount ? `Reward discount: -${formatINR(discount)}\n` : "") +
       `Delivery: ${formatINR(DELIVERY_FEE)}\n` +
       `*Total: ${formatINR(total)}*\n\n` +
+      (rewards.length ? `*Rewards:*\n${rewards.join("\n")}\n\n` : "") +
       `*Payment:* ${methodLabel}\n\n` +
       `*Customer:*\n${name}\n${phone}\n${email}\n\n` +
       `*Deliver to:*\n${address}\n${city} - ${pincode}` +
@@ -95,6 +102,7 @@ function Checkout() {
       window.open(waUrl, "_blank", "noopener,noreferrer");
       setSubmitting(false);
       toast.success("Order sent! Confirm it in WhatsApp to complete.");
+      consumeForOrder();
       clear();
       navigate({ to: "/" });
     }, method === "gpay" ? 1200 : 400);
@@ -232,6 +240,21 @@ function Checkout() {
                   <span>Subtotal ({count} items)</span>
                   <span>{formatINR(subtotal)}</span>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between font-semibold text-primary">
+                    <span>
+                      Spin &amp; Win reward
+                      {voucher && prize?.id !== "next40" ? " + voucher" : ""}
+                    </span>
+                    <span>-{formatINR(discount)}</span>
+                  </div>
+                )}
+                {freebies && (
+                  <div className="flex justify-between font-semibold text-primary">
+                    <span>{prize?.emoji} {freebies}</span>
+                    <span>FREE</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-muted-foreground">
                   <span>Delivery</span>
                   <span>{formatINR(DELIVERY_FEE)}</span>
