@@ -12,10 +12,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
+import { useBill, SPIN_MIN_SUBTOTAL } from "@/lib/reward";
 import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
 export function SiteHeader() {
   const { items, count, subtotal, setQty, remove } = useCart();
+  const { discount, delivery, total, freeItem, rewardLabel, rewardPaused } = useBill();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur-xl">
@@ -97,9 +99,42 @@ export function SiteHeader() {
                   ))}
                 </div>
                 <SheetFooter className="mt-auto gap-3 border-t border-border/60 pt-4 sm:flex-col sm:space-x-0">
-                  <div className="flex items-center justify-between text-base font-semibold">
-                    <span>Subtotal</span>
-                    <span>{formatINR(subtotal)}</span>
+                  <div className="w-full space-y-1.5 text-sm">
+                    <div className="flex items-center justify-between text-muted-foreground">
+                      <span>Subtotal</span>
+                      <span>{formatINR(subtotal)}</span>
+                    </div>
+                    {rewardLabel && (
+                      <div className="flex items-center justify-between font-semibold text-primary">
+                        <span>Spin reward</span>
+                        <span>{rewardLabel}</span>
+                      </div>
+                    )}
+                    {freeItem && (
+                      <div className="flex items-center justify-between font-semibold text-primary">
+                        <span>{freeItem.emoji} {freeItem.label}</span>
+                        <span>₹0</span>
+                      </div>
+                    )}
+                    {rewardPaused && (
+                      <p className="text-xs font-medium text-muted-foreground">
+                        Reward paused — add {formatINR(SPIN_MIN_SUBTOTAL - subtotal)} more to restore it.
+                      </p>
+                    )}
+                    {discount > 0 && (
+                      <div className="flex items-center justify-between font-semibold text-primary">
+                        <span>Discount</span>
+                        <span>-{formatINR(discount)}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between text-muted-foreground">
+                      <span>Delivery charge</span>
+                      <span>{formatINR(delivery)}</span>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-border/60 pt-1.5 text-base font-semibold text-foreground">
+                      <span>Final amount</span>
+                      <span>{formatINR(total)}</span>
+                    </div>
                   </div>
                   <SheetClose asChild>
                     <Button asChild size="lg" className="btn-3d w-full rounded-full font-bold">

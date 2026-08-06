@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
-import { useReward } from "@/lib/reward";
+import { useBill, useReward, DELIVERY_FEE, SPIN_MIN_SUBTOTAL } from "@/lib/reward";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -20,8 +20,6 @@ export const Route = createFileRoute("/checkout")({
   }),
   component: Checkout,
 });
-
-const DELIVERY_FEE = 49;
 
 // Owner order-desk details — edit these to change where orders land.
 const BUSINESS_WHATSAPP = "918610270207"; // country code + number, no "+"
@@ -38,14 +36,11 @@ const PAY_METHODS: { id: PayMethod; label: string; hint: string; icon: typeof Sm
 
 function Checkout() {
   const { items, subtotal, count, clear } = useCart();
-  const { prize, voucher, discountFor, rewardLines, consumeForOrder } = useReward();
+  const { rewardLines, consumeForOrder } = useReward();
+  const { discount, delivery, total, freeItem, rewardLabel, rewardPaused } = useBill();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<PayMethod>("gpay");
-
-  const discount = discountFor(subtotal);
-  const total = Math.max(0, subtotal - discount) + (items.length ? DELIVERY_FEE : 0);
-  const freebies = prize && (prize.id === "dip" || prize.id === "oreo") ? prize.label : null;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -77,8 +72,10 @@ function Checkout() {
       `🍫 *New ${BUSINESS_NAME} Order* (${orderId})\n\n` +
       `*Items:*\n${lines.join("\n")}\n\n` +
       `Subtotal: ${formatINR(subtotal)}\n` +
+      (rewardLabel ? `Spin reward: ${rewardLabel}\n` : "") +
+      (freeItem ? `Free item: ${freeItem.emoji} ${freeItem.label} — ₹0\n` : "") +
       (discount ? `Reward discount: -${formatINR(discount)}\n` : "") +
-      `Delivery: ${formatINR(DELIVERY_FEE)}\n` +
+      `Delivery: ${formatINR(delivery)}\n` +
       `*Total: ${formatINR(total)}*\n\n` +
       (rewards.length ? `*Rewards:*\n${rewards.join("\n")}\n\n` : "") +
       `*Payment:* ${methodLabel}\n\n` +
@@ -240,27 +237,35 @@ function Checkout() {
                   <span>Subtotal ({count} items)</span>
                   <span>{formatINR(subtotal)}</span>
                 </div>
+                {rewardLabel && (
+                  <div className="flex justify-between font-semibold text-primary">
+                    <span>Spin &amp; Win reward</span>
+                    <span>{rewardLabel}</span>
+                  </div>
+                )}
+                {rewardPaused && (
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Reward paused — add {formatINR(SPIN_MIN_SUBTOTAL - subtotal)} more to restore it.
+                  </p>
+                )}
                 {discount > 0 && (
                   <div className="flex justify-between font-semibold text-primary">
-                    <span>
-                      Spin &amp; Win reward
-                      {voucher && prize?.id !== "next40" ? " + voucher" : ""}
-                    </span>
+                    <span>Discount</span>
                     <span>-{formatINR(discount)}</span>
                   </div>
                 )}
-                {freebies && (
+                {freeItem && (
                   <div className="flex justify-between font-semibold text-primary">
-                    <span>{prize?.emoji} {freebies}</span>
-                    <span>FREE</span>
+                    <span>{freeItem.emoji} {freeItem.label}</span>
+                    <span>₹0</span>
                   </div>
                 )}
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Delivery</span>
-                  <span>{formatINR(DELIVERY_FEE)}</span>
+                  <span>Delivery charge</span>
+                  <span>{formatINR(delivery)}</span>
                 </div>
                 <div className="flex justify-between pt-2 text-base font-semibold text-foreground">
-                  <span>Total</span>
+                  <span>Final amount</span>
                   <span>{formatINR(total)}</span>
                 </div>
               </div>

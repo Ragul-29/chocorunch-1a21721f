@@ -4,9 +4,11 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { useCart } from "./cart";
 
 export type Prize = {
   id: string;
@@ -26,6 +28,7 @@ export const prizes: Prize[] = [
 ];
 
 export const SPIN_MIN_SUBTOTAL = 200;
+export const DELIVERY_FEE = 49;
 
 const SPIN_KEY = "chocorunch-spin";
 const VOUCHER_KEY = "chocorunch-voucher";
@@ -53,6 +56,19 @@ export function RewardProvider({ children }: { children: ReactNode }) {
   const [spin, setSpin] = useState<SpinRecord | null>(null);
   const [voucher, setVoucher] = useState(false);
   const [ready, setReady] = useState(false);
+  const { items } = useCart();
+  const wasFilled = useRef(false);
+
+  // Reset the spin lock when the cart is fully cleared (never on first load).
+  useEffect(() => {
+    if (!ready) return;
+    if (items.length > 0) {
+      wasFilled.current = true;
+    } else if (wasFilled.current) {
+      wasFilled.current = false;
+      setSpin(null);
+    }
+  }, [items.length, ready]);
 
   useEffect(() => {
     try {
@@ -93,6 +109,8 @@ export function RewardProvider({ children }: { children: ReactNode }) {
     const prize = spin ? prizes.find((p) => p.id === spin.prizeId) ?? null : null;
 
     const discountFor = (subtotal: number) => {
+      // Rewards pause below the unlock threshold and restore automatically above it.
+      if (subtotal < SPIN_MIN_SUBTOTAL) return 0;
       let d = 0;
       if (prize?.id === "pct20") d += Math.round(subtotal * 0.2);
       if (prize?.id === "flat30") d += 30;
@@ -102,6 +120,7 @@ export function RewardProvider({ children }: { children: ReactNode }) {
 
     const rewardLines = (subtotal: number) => {
       const lines: string[] = [];
+      if (subtotal < SPIN_MIN_SUBTOTAL) return lines;
       if (prize) {
         if (prize.id === "pct20") lines.push(`🎡 Spin & Win: 20% discount (−₹${Math.round(subtotal * 0.2)})`);
         else if (prize.id === "flat30") lines.push("🎡 Spin & Win: ₹30 instant discount");
@@ -130,4 +149,45 @@ export function useReward() {
   const ctx = useContext(RewardContext);
   if (!ctx) throw new Error("useReward must be used within RewardProvider");
   return ctx;
+}
+
+export type Bill = {
+  subtotal: number;
+  /** True when a prize exists and the subtotal still qualifies. */
+  rewardActive: boolean;
+  /** Label of the active reward ("20% discount" etc.), or null. */
+  rewardLabel: string | null;
+  /** Free item earned from the wheel, added to the bill at ₹0. */
+  freeItem: { emoji: string; label: string } | null;
+  discount: number;
+  delivery: number;
+  total: number;
+  /** True when a prize is on hold because the subtotal dropped below ₹200. */
+  rewardPaused: boolean;
+};
+
+/** Single source of truth for the bill shown in cart, checkout, UPI and WhatsApp. */
+export function useBill(): Bill {
+  const { items, subtotal } = useCart();
+  const { prize, voucher, discountFor } = useReward();
+
+  const qualifies = subtotal >= SPIN_MIN_SUBTOTAL;
+  const rewardActive = !!prize && qualifies;
+  const discount = discountFor(subtotal);
+  const delivery = items.length ? DELIVERY_FEE : 0;
+  const freeItem =
+    rewardActive && (prize!.id === "dip" || prize!.id === "oreo")
+      ? { emoji: prize!.emoji, label: prize!.label }
+      : null;
+
+  return {
+    subtotal,
+    rewardActive,
+    rewardLabel: rewardActive ? prize!.label : voucher && qualifies ? "₹40 voucher" : null,
+    freeItem,
+    discount,
+    delivery,
+    total: Math.max(0, subtotal - discount) + delivery,
+    rewardPaused: !!prize && !qualifies,
+  };
 }
