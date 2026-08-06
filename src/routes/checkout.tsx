@@ -237,27 +237,35 @@ function Checkout() {
                   <span>Subtotal ({count} items)</span>
                   <span>{formatINR(subtotal)}</span>
                 </div>
+                {rewardLabel && (
+                  <div className="flex justify-between font-semibold text-primary">
+                    <span>Spin &amp; Win reward</span>
+                    <span>{rewardLabel}</span>
+                  </div>
+                )}
+                {rewardPaused && (
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Reward paused — add {formatINR(SPIN_MIN_SUBTOTAL - subtotal)} more to restore it.
+                  </p>
+                )}
                 {discount > 0 && (
                   <div className="flex justify-between font-semibold text-primary">
-                    <span>
-                      Spin &amp; Win reward
-                      {voucher && prize?.id !== "next40" ? " + voucher" : ""}
-                    </span>
+                    <span>Discount</span>
                     <span>-{formatINR(discount)}</span>
                   </div>
                 )}
-                {freebies && (
+                {freeItem && (
                   <div className="flex justify-between font-semibold text-primary">
-                    <span>{prize?.emoji} {freebies}</span>
-                    <span>FREE</span>
+                    <span>{freeItem.emoji} {freeItem.label}</span>
+                    <span>₹0</span>
                   </div>
                 )}
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Delivery</span>
-                  <span>{formatINR(DELIVERY_FEE)}</span>
+                  <span>Delivery charge</span>
+                  <span>{formatINR(delivery)}</span>
                 </div>
                 <div className="flex justify-between pt-2 text-base font-semibold text-foreground">
-                  <span>Total</span>
+                  <span>Final amount</span>
                   <span>{formatINR(total)}</span>
                 </div>
               </div>
