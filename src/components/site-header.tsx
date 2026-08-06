@@ -1,5 +1,13 @@
-import { Link } from "@tanstack/react-router";
-import { ShoppingBag, Minus, Plus, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ShoppingBag, Minus, Plus, Trash2, User, LogOut, Receipt } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -13,11 +21,14 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
 import { useBill, SPIN_MIN_SUBTOTAL } from "@/lib/reward";
+import { useAuth } from "@/lib/auth";
 import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
 export function SiteHeader() {
   const { items, count, subtotal, setQty, remove } = useCart();
   const { discount, delivery, total, freeItem, rewardLabel, rewardPaused } = useBill();
+  const { user, displayName, initials, signOut } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur-xl">
@@ -43,6 +54,45 @@ export function SiteHeader() {
             Menu
           </Link>
         </nav>
+
+        <div className="flex items-center gap-2">
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                aria-label="Account menu"
+                className="flex items-center gap-2 rounded-full border border-border/60 bg-card py-1 pl-1 pr-3 shadow-sm transition-transform hover:-translate-y-0.5"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                  {initials}
+                </span>
+                <span className="hidden max-w-24 truncate text-sm font-semibold sm:inline">{displayName}</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuLabel className="truncate">{displayName || user.email}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate({ to: "/orders" })}>
+                <Receipt className="mr-2 h-4 w-4" /> My orders
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () => {
+                  await signOut();
+                  navigate({ to: "/", replace: true });
+                }}
+              >
+                <LogOut className="mr-2 h-4 w-4" /> Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button asChild size="sm" variant="secondary" className="gap-1.5 rounded-full font-bold">
+            <Link to="/login">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Log in</span>
+            </Link>
+          </Button>
+        )}
 
         <Sheet>
           <SheetTrigger asChild>
@@ -146,6 +196,7 @@ export function SiteHeader() {
             )}
           </SheetContent>
         </Sheet>
+        </div>
       </div>
     </header>
   );
