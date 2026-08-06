@@ -11,7 +11,7 @@ import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
 import { useBill, useReward, DELIVERY_FEE, SPIN_MIN_SUBTOTAL } from "@/lib/reward";
 
-export const Route = createFileRoute("/checkout")({
+export const Route = createFileRoute("/_authenticated/checkout")({
   head: () => ({
     meta: [
       { title: "Checkout — Chocorunch" },
