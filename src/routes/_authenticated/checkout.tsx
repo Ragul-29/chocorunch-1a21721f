@@ -10,12 +10,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
 import { useBill, useReward, DELIVERY_FEE, SPIN_MIN_SUBTOTAL } from "@/lib/reward";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/checkout")({
   head: () => ({
     meta: [
       { title: "Checkout — Chocorunch" },
       { name: "description", content: "Enter your delivery details and place your Chocorunch order." },
+      { property: "og:title", content: "Checkout — Chocorunch" },
+      { property: "og:description", content: "Enter your delivery details and place your Chocorunch order." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Checkout,
@@ -38,11 +44,12 @@ function Checkout() {
   const { items, subtotal, count, clear } = useCart();
   const { rewardLines, consumeForOrder } = useReward();
   const { discount, delivery, total, freeItem, rewardLabel, rewardPaused } = useBill();
+  const { user, profile, displayName } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<PayMethod>("gpay");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (items.length === 0) return;
     const form = e.currentTarget;
@@ -68,6 +75,31 @@ function Checkout() {
 
     const orderId = `CR${Date.now().toString().slice(-6)}`;
     const rewards = rewardLines(subtotal);
+
+    // Save to the signed-in customer's order history (best-effort).
+    if (user) {
+      const { error: saveError } = await supabase.from("orders").insert({
+        user_id: user.id,
+        order_code: orderId,
+        items: items.map(({ product, qty }) => ({
+          name: product.name,
+          emoji: product.emoji,
+          qty,
+          price: product.price,
+        })),
+        subtotal,
+        discount,
+        delivery,
+        total,
+        payment_method: methodLabel,
+        reward_label: rewardLabel ?? null,
+        customer_name: name,
+        customer_phone: phone,
+        address: `${address}, ${city} - ${pincode}`,
+      });
+      if (saveError) console.error("Could not save order history", saveError);
+    }
+
     const message =
       `🍫 *New ${BUSINESS_NAME} Order* (${orderId})\n\n` +
       `*Items:*\n${lines.join("\n")}\n\n` +
@@ -141,15 +173,15 @@ function Checkout() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full name</Label>
-                  <Input id="name" required placeholder="Your name" />
+                  <Input id="name" required placeholder="Your name" defaultValue={displayName} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone</Label>
-                  <Input id="phone" type="tel" required placeholder="10-digit mobile" />
+                  <Input id="phone" type="tel" required placeholder="10-digit mobile" defaultValue={profile?.mobile ?? ""} />
                 </div>
                 <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" required placeholder="you@example.com" />
+                  <Input id="email" type="email" required placeholder="you@example.com" defaultValue={user?.email ?? ""} />
                 </div>
               </div>
             </section>
