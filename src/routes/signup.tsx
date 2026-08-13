@@ -114,7 +114,7 @@ function SignupPage() {
       footer={
         <>
           Already have an account?{" "}
-          <Link to="/" search={{}} search={{ redirect: search.redirect }} className="font-bold text-primary hover:underline">
+          <Link to="/" search={{ redirect: search.redirect }} className="font-bold text-primary hover:underline">
             Log in
           </Link>
         </>
