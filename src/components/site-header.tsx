@@ -33,7 +33,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/50 bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2.5">
+        <Link to="/home" className="flex items-center gap-2.5">
           <img
             src={logoAsset.url}
             alt="Chocorunch"
@@ -47,7 +47,7 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium sm:flex">
-          <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "text-primary" }} className="text-muted-foreground transition-colors hover:text-primary">
+          <Link to="/home" activeOptions={{ exact: true }} activeProps={{ className: "text-primary" }} className="text-muted-foreground transition-colors hover:text-primary">
             Home
           </Link>
           <Link to="/menu" activeProps={{ className: "text-primary" }} className="text-muted-foreground transition-colors hover:text-primary">
@@ -78,7 +78,7 @@ export function SiteHeader() {
               <DropdownMenuItem
                 onClick={async () => {
                   await signOut();
-                  navigate({ to: "/", replace: true });
+                  navigate({ to: "/", search: {}, replace: true });
                 }}
               >
                 <LogOut className="mr-2 h-4 w-4" /> Log out
@@ -87,7 +87,7 @@ export function SiteHeader() {
           </DropdownMenu>
         ) : (
           <Button asChild size="sm" variant="secondary" className="gap-1.5 rounded-full font-bold">
-            <Link to="/login">
+            <Link to="/" search={{}}>
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">Log in</span>
             </Link>

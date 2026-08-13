@@ -1,112 +1,105 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Truck, ShieldCheck, Sparkles } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
+import { LoginForm, OAUTH_REDIRECT_KEY } from "@/components/login-form";
+import { useAuth, safeRedirect } from "@/lib/auth";
 import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Log in — Chocorunch" },
+      {
+        name: "description",
+        content: "Log in to Chocorunch to explore the menu, build your box and order handcrafted crunch chocolate.",
+      },
+      { property: "og:title", content: "Log in — Chocorunch" },
+      {
+        property: "og:description",
+        content: "Log in to Chocorunch to explore the menu, build your box and order handcrafted crunch chocolate.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
+    redirect: typeof search["redirect"] === "string" ? (search["redirect"] as string) : undefined,
+  }),
+  component: LoginLanding,
 });
 
-function Index() {
+function LoginLanding() {
+  const navigate = useNavigate();
+  const search = Route.useSearch();
+  const { user, loading } = useAuth();
+  const dest = safeRedirect(search.redirect, "/home");
+
+  // Never flash the login card for a signed-in user — go straight through.
+  useEffect(() => {
+    if (loading || !user) return;
+    const stored = sessionStorage.getItem(OAUTH_REDIRECT_KEY);
+    sessionStorage.removeItem(OAUTH_REDIRECT_KEY);
+    navigate({ to: safeRedirect(stored ?? dest, "/home"), replace: true });
+  }, [loading, user, dest, navigate]);
+
+  if (loading || user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-7 w-7 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10">
+      <div
+        className="glow-pulse pointer-events-none absolute -left-24 top-0 h-80 w-80 rounded-full opacity-60 blur-3xl"
+        style={{ background: "var(--mint)" }}
+      />
+      <div
+        className="glow-pulse pointer-events-none absolute -right-24 bottom-0 h-96 w-96 rounded-full opacity-60 blur-3xl"
+        style={{ background: "var(--pink)" }}
+      />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
-          <div className="scene-3d relative order-1 flex items-center justify-center">
-            <div className="glow-pulse absolute h-72 w-72 rounded-full bg-[var(--sky)] blur-3xl sm:h-96 sm:w-96" />
-            <div className="spin-slow absolute h-80 w-80 rounded-full border-4 border-dashed border-[var(--peach)]/60 sm:h-[26rem] sm:w-[26rem]" />
-            <img
-              src={logoAsset.url}
-              alt="Chocorunch — Dip & Crunch"
-              width={420}
-              height={420}
-              className="float-3d relative w-full max-w-sm rounded-full shadow-2xl ring-4 ring-white/70"
-            />
-          </div>
-
-          <div className="order-2 flex flex-col items-start gap-6">
-            <span className="inline-flex items-center gap-2 rounded-full bg-[var(--mint)] px-4 py-1.5 text-sm font-bold text-secondary-foreground shadow-sm">
-              <Sparkles className="h-4 w-4" /> Dip &amp; Crunch, delivered!
-            </span>
-            <h1 className="font-display text-5xl font-extrabold leading-[1.02] tracking-tight text-primary sm:text-6xl">
-              The crunch you<br />
-              <span className="text-[var(--pink)]">crave</span>, delivered.
-            </h1>
-            <p className="max-w-md text-lg font-medium text-muted-foreground">
-              Chocorunch is chocolate with an irresistible crunch. Explore the
-              menu, build your box, and we&apos;ll bounce it right to your door.
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="btn-3d group rounded-full px-8 text-base font-bold">
-                <Link to="/menu">
-                  Explore Menu
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
+      <div className="scene-3d relative w-full max-w-md">
+        <div className="clay p-6 sm:p-9">
+          <div className="mb-6 flex flex-col items-center gap-4 text-center">
+            <div className="relative flex items-center justify-center">
+              <span className="spin-slow absolute h-44 w-44 rounded-full border-4 border-dashed border-[var(--peach)]/70 sm:h-52 sm:w-52" />
+              <span
+                className="glow-pulse absolute h-40 w-40 rounded-full blur-2xl sm:h-48 sm:w-48"
+                style={{ background: "var(--caramel)" }}
+              />
+              <img
+                src={logoAsset.url}
+                alt="Chocorunch"
+                width={176}
+                height={176}
+                className="float-3d relative h-36 w-36 rounded-full object-cover shadow-2xl ring-4 ring-white/80 sm:h-44 sm:w-44"
+              />
+            </div>
+            <div>
+              <p className="font-display text-3xl font-extrabold tracking-tight text-primary">Chocorunch</p>
+              <p className="text-sm font-semibold text-[var(--pink)]">Dip &amp; Crunch, delivered!</p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Feature strip */}
-      <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div className="grid gap-5 sm:grid-cols-3">
-          {[
-            { icon: Truck, title: "Fast delivery", text: "Freshly packed and shipped to your doorstep.", bg: "var(--mint)" },
-            { icon: ShieldCheck, title: "Secure checkout", text: "Pay online safely with a smooth checkout.", bg: "var(--sky)" },
-            { icon: Sparkles, title: "Real ingredients", text: "Made with quality chocolate and crisp.", bg: "var(--caramel)" },
-          ].map(({ icon: Icon, title, text, bg }) => (
-            <div key={title} className="clay tilt-3d pop-in flex items-start gap-3 p-5">
-              <div
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-primary shadow-inner"
-                style={{ backgroundColor: bg }}
-              >
-                <Icon className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="font-display text-lg font-bold text-foreground">{title}</p>
-                <p className="text-sm text-muted-foreground">{text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-foreground">Welcome back</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Log in to explore the menu and order your crunch.</p>
 
-      {/* CTA */}
-      <section className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-        <div className="clay relative overflow-hidden p-10 text-center sm:p-14">
-          <h2 className="font-display text-3xl font-extrabold text-primary sm:text-4xl">
-            Ready to taste the crunch?
-          </h2>
-          <p className="mx-auto mt-3 max-w-md font-medium text-muted-foreground">
-            Browse our full menu and place your order in minutes.
-          </p>
-          <Button asChild size="lg" className="btn-3d mt-6 rounded-full px-8 text-base font-bold">
-            <Link to="/menu">
-              See the Menu <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="mt-6">
+            <LoginForm dest={dest} onSuccess={() => navigate({ to: dest, replace: true })} showSignupLink={false} />
+          </div>
         </div>
-      </section>
 
-      <footer className="mt-6 border-t border-border/50">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 py-10 sm:px-6">
-          <img
-            src={logoAsset.url}
-            alt="Chocorunch"
-            className="h-14 w-14 rounded-full shadow ring-2 ring-white/70"
-            width={56}
-            height={56}
-          />
-          <p className="text-sm font-medium text-muted-foreground">
-            © {new Date().getFullYear()} Chocorunch · Dip &amp; Crunch!
-          </p>
-        </div>
-      </footer>
+        <p className="mt-5 text-center text-sm text-muted-foreground">
+          New to Chocorunch?{" "}
+          <Link to="/signup" search={{ redirect: search.redirect }} className="font-bold text-primary hover:underline">
+            Create an account
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

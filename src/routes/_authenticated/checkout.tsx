@@ -133,7 +133,7 @@ function Checkout() {
       toast.success("Order sent! Confirm it in WhatsApp to complete.");
       consumeForOrder();
       clear();
-      navigate({ to: "/" });
+      navigate({ to: "/home" });
     }, method === "gpay" ? 1200 : 400);
   };
 
