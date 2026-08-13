@@ -51,7 +51,7 @@ function ForgotPasswordPage() {
       title="Forgot password?"
       subtitle="We'll email you a secure link to set a new one."
       footer={
-        <Link to="/"  className="font-bold text-primary hover:underline">
+        <Link to="/" search={{}} className="font-bold text-primary hover:underline">
           Back to log in
         </Link>
       }

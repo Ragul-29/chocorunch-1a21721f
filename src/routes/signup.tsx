@@ -91,7 +91,7 @@ function SignupPage() {
         title="Confirm your email"
         subtitle="One last crunchy step."
         footer={
-          <Link to="/"  className="font-bold text-primary hover:underline">
+          <Link to="/" search={{}} className="font-bold text-primary hover:underline">
             Back to log in
           </Link>
         }
