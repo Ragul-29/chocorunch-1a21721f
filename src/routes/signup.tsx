@@ -21,7 +21,7 @@ export const Route = createFileRoute("/signup")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
     redirect: typeof search["redirect"] === "string" ? (search["redirect"] as string) : undefined,
   }),
   component: SignupPage,
@@ -91,7 +91,7 @@ function SignupPage() {
         title="Confirm your email"
         subtitle="One last crunchy step."
         footer={
-          <Link to="/login" className="font-bold text-primary hover:underline">
+          <Link to="/"  className="font-bold text-primary hover:underline">
             Back to log in
           </Link>
         }
@@ -114,7 +114,7 @@ function SignupPage() {
       footer={
         <>
           Already have an account?{" "}
-          <Link to="/login" search={{ redirect: search.redirect }} className="font-bold text-primary hover:underline">
+          <Link to="/" search={{}} search={{ redirect: search.redirect }} className="font-bold text-primary hover:underline">
             Log in
           </Link>
         </>

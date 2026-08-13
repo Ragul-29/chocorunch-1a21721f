@@ -26,7 +26,7 @@ export function AuthShell({
 
       <div className="scene-3d relative w-full max-w-md">
         <div className="clay p-7 sm:p-9">
-          <Link to="/" className="mb-6 flex flex-col items-center gap-3 text-center">
+          <Link to="/" search={{}} className="mb-6 flex flex-col items-center gap-3 text-center">
             <img
               src={logoAsset.url}
               alt="Chocorunch"

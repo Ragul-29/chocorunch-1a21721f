@@ -163,7 +163,7 @@ export function LoginForm({
       {showSignupLink && (
         <p className="pt-1 text-center text-sm text-muted-foreground">
           New to Chocorunch?{" "}
-          <Link to="/signup" className="font-bold text-primary hover:underline">
+          <Link to="/signup" search={{}} className="font-bold text-primary hover:underline">
             Create an account
           </Link>
         </p>
