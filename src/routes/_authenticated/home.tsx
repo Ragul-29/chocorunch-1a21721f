@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/home")({
   component: Index,
 });
 
