@@ -1,12 +1,89 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Truck, ShieldCheck, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { ArrowRight, Truck, ShieldCheck, Sparkles, Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { LoginForm } from "@/components/login-form";
+import { supabase } from "@/integrations/supabase/client";
 import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
 export const Route = createFileRoute("/_authenticated/home")({
+  head: () => ({
+    meta: [
+      { title: "Chocorunch — Handcrafted Crunch Chocolate, Delivered" },
+      {
+        name: "description",
+        content:
+          "Explore the Chocorunch menu, build your own box and get handcrafted crunch chocolate delivered to your door.",
+      },
+      { property: "og:title", content: "Chocorunch — Handcrafted Crunch Chocolate, Delivered" },
+      {
+        property: "og:description",
+        content: "Explore the Chocorunch menu, build your own box and get crunch chocolate delivered.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
+
+/** Explore Menu — verifies the live session, then opens the menu or the login popup. */
+function ExploreMenuButton({ label = "Explore Menu" }: { label?: string }) {
+  const navigate = useNavigate();
+  const [checking, setChecking] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+
+  const handleClick = async () => {
+    setChecking(true);
+    const { data, error } = await supabase.auth.getUser();
+    setChecking(false);
+    if (!error && data.user) {
+      navigate({ to: "/menu" });
+      return;
+    }
+    setLoginOpen(true);
+  };
+
+  return (
+    <>
+      <Button
+        size="lg"
+        onClick={handleClick}
+        disabled={checking}
+        className="btn-3d group rounded-full px-8 text-base font-bold"
+      >
+        {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+        {label}
+        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </Button>
+
+      <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
+          <DialogHeader className="items-center text-center">
+            <img
+              src={logoAsset.url}
+              alt="Chocorunch"
+              width={96}
+              height={96}
+              className="float-3d h-24 w-24 rounded-full object-cover shadow-xl ring-4 ring-white/80"
+            />
+            <DialogTitle className="font-display text-2xl font-extrabold">Log in to continue</DialogTitle>
+            <DialogDescription>Sign in and we&apos;ll take you straight to the menu.</DialogDescription>
+          </DialogHeader>
+          <LoginForm
+            dest="/menu"
+            onSuccess={() => {
+              setLoginOpen(false);
+              navigate({ to: "/menu" });
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
 
 function Index() {
   return (
@@ -41,12 +118,7 @@ function Index() {
               menu, build your box, and we&apos;ll bounce it right to your door.
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="btn-3d group rounded-full px-8 text-base font-bold">
-                <Link to="/menu">
-                  Explore Menu
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
+              <ExploreMenuButton />
             </div>
           </div>
         </div>
