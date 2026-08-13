@@ -8,7 +8,7 @@ import { BoxBuilder, type BuilderConfig } from "@/components/box-builder";
 import { SpinWheelCard } from "@/components/spin-wheel";
 import { dips, mainItems, boxTiers, formatINR } from "@/lib/products";
 
-export const Route = createFileRoute("/menu")({
+export const Route = createFileRoute("/_authenticated/menu")({
   head: () => ({
     meta: [
       { title: "Menu — Chocorunch" },
