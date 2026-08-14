@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { LoginForm } from "@/components/login-form";
+import { BirthdayBanner } from "@/components/birthday-banner";
 import { supabase } from "@/integrations/supabase/client";
 import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
@@ -89,6 +90,10 @@ function Index() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+
+      <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
+        <BirthdayBanner />
+      </div>
 
       {/* Hero */}
       <section className="relative overflow-hidden">

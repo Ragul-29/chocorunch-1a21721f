@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ShoppingBag, Minus, Plus, Trash2, User, LogOut, Receipt } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Trash2, User, LogOut, Receipt, Cake } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +26,8 @@ import logoAsset from "@/assets/chocorunch-logo.asset.json";
 
 export function SiteHeader() {
   const { items, count, subtotal, setQty, remove } = useCart();
-  const { discount, delivery, total, freeItem, rewardLabel, rewardPaused } = useBill();
+  const { discount, delivery, total, freeItem, rewardLabel, rewardPaused, birthdayDiscount, birthdayLabel, birthdayShort } =
+    useBill();
   const { user, displayName, initials, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -72,6 +73,9 @@ export function SiteHeader() {
             <DropdownMenuContent align="end" className="w-52">
               <DropdownMenuLabel className="truncate">{displayName || user.email}</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
+                <User className="mr-2 h-4 w-4" /> My profile
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate({ to: "/orders" })}>
                 <Receipt className="mr-2 h-4 w-4" /> My orders
               </DropdownMenuItem>
@@ -169,6 +173,19 @@ export function SiteHeader() {
                     {rewardPaused && (
                       <p className="text-xs font-medium text-muted-foreground">
                         Reward paused — add {formatINR(SPIN_MIN_SUBTOTAL - subtotal)} more to restore it.
+                      </p>
+                    )}
+                    {birthdayDiscount > 0 && (
+                      <div className="flex items-center justify-between font-semibold text-primary">
+                        <span className="flex items-center gap-1.5">
+                          <Cake className="h-3.5 w-3.5" /> {birthdayLabel}
+                        </span>
+                        <span>-{formatINR(birthdayDiscount)}</span>
+                      </div>
+                    )}
+                    {birthdayShort > 0 && (
+                      <p className="text-xs font-medium text-muted-foreground">
+                        🎂 Add {formatINR(birthdayShort)} more to use your birthday offer.
                       </p>
                     )}
                     {discount > 0 && (
