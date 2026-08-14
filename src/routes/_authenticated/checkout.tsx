@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, ShoppingBag, Check, Smartphone, CreditCard, Wallet } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Check, Smartphone, CreditCard, Wallet, Cake } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/lib/cart";
 import { formatINR } from "@/lib/products";
 import { useBill, useReward, DELIVERY_FEE, SPIN_MIN_SUBTOTAL } from "@/lib/reward";
+import { useBirthday, BIRTHDAY_MIN_SUBTOTAL, BIRTHDAY_OFFER_LABEL } from "@/lib/birthday";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -43,7 +44,8 @@ const PAY_METHODS: { id: PayMethod; label: string; hint: string; icon: typeof Sm
 function Checkout() {
   const { items, subtotal, count, clear } = useCart();
   const { rewardLines, consumeForOrder } = useReward();
-  const { discount, delivery, total, freeItem, rewardLabel, rewardPaused } = useBill();
+  const { discount, delivery, total, freeItem, rewardLabel, rewardPaused, birthdayDiscount, birthdayShort } = useBill();
+  const birthday = useBirthday();
   const { user, profile, displayName } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
@@ -76,6 +78,11 @@ function Checkout() {
     const orderId = `CR${Date.now().toString().slice(-6)}`;
     const rewards = rewardLines(subtotal);
 
+    // Lock the birthday coupon for this birthday month so a refresh or re-login can't reuse it.
+    if (birthdayDiscount > 0) {
+      await birthday.markRedeemed(orderId, birthdayDiscount);
+    }
+
     // Save to the signed-in customer's order history (best-effort).
     if (user) {
       const { error: saveError } = await supabase.from("orders").insert({
@@ -106,6 +113,7 @@ function Checkout() {
       `Subtotal: ${formatINR(subtotal)}\n` +
       (rewardLabel ? `Spin reward: ${rewardLabel}\n` : "") +
       (freeItem ? `Free item: ${freeItem.emoji} ${freeItem.label} — ₹0\n` : "") +
+      (birthdayDiscount ? `🎂 Birthday offer: -${formatINR(birthdayDiscount)}\n` : "") +
       (discount ? `Reward discount: -${formatINR(discount)}\n` : "") +
       `Delivery: ${formatINR(delivery)}\n` +
       `*Total: ${formatINR(total)}*\n\n` +
@@ -278,6 +286,34 @@ function Checkout() {
                 {rewardPaused && (
                   <p className="text-xs font-medium text-muted-foreground">
                     Reward paused — add {formatINR(SPIN_MIN_SUBTOTAL - subtotal)} more to restore it.
+                  </p>
+                )}
+                {birthday.available && (
+                  <div className="clay flex flex-wrap items-center gap-2 p-3">
+                    <Cake className="h-4 w-4 shrink-0 text-primary" />
+                    <span className="min-w-0 flex-1 text-xs font-semibold text-foreground">
+                      Birthday offer · ₹50 OFF above {formatINR(BIRTHDAY_MIN_SUBTOTAL)}
+                    </span>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={birthday.applied ? "secondary" : "default"}
+                      className="rounded-full text-xs font-bold"
+                      onClick={() => birthday.setApplied(!birthday.applied)}
+                    >
+                      {birthday.applied ? "Applied" : "Apply Birthday Offer"}
+                    </Button>
+                  </div>
+                )}
+                {birthdayDiscount > 0 && (
+                  <div className="flex justify-between font-semibold text-primary">
+                    <span>🎂 {BIRTHDAY_OFFER_LABEL}</span>
+                    <span>-{formatINR(birthdayDiscount)}</span>
+                  </div>
+                )}
+                {birthdayShort > 0 && (
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Add {formatINR(birthdayShort)} more to use your birthday offer.
                   </p>
                 )}
                 {discount > 0 && (
