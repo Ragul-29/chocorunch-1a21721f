@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "../lib/cart";
 import { RewardProvider } from "../lib/reward";
 import { AuthProvider } from "../lib/auth";
+import { BirthdayProvider } from "../lib/birthday";
 import { Toaster } from "../components/ui/sonner";
 import "@fontsource/baloo-2/500.css";
 import "@fontsource/baloo-2/600.css";
@@ -141,13 +142,15 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <CartProvider>
-          <RewardProvider>
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
-            <Toaster richColors position="top-center" />
-          </RewardProvider>
-        </CartProvider>
+        <BirthdayProvider>
+          <CartProvider>
+            <RewardProvider>
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <Outlet />
+              <Toaster richColors position="top-center" />
+            </RewardProvider>
+          </CartProvider>
+        </BirthdayProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

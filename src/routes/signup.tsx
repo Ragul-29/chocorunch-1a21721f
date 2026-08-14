@@ -35,6 +35,7 @@ function SignupPage() {
   const [fullName, setFullName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
+  const [dob, setDob] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -62,7 +63,7 @@ function SignupPage() {
       password,
       options: {
         emailRedirectTo: window.location.origin,
-        data: { full_name: fullName.trim(), mobile: mobile.replace(/\D/g, "") },
+        data: { full_name: fullName.trim(), mobile: mobile.replace(/\D/g, ""), dob: dob || "" },
       },
     });
     setSubmitting(false);
@@ -141,6 +142,14 @@ function SignupPage() {
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="dob">
+            Date of birth <span className="font-normal text-muted-foreground">(optional)</span>
+          </Label>
+          <Input id="dob" type="date" autoComplete="bday" value={dob} onChange={(e) => setDob(e.target.value)} />
+          <p className="text-xs font-medium text-muted-foreground">🎂 Unlocks ₹50 OFF on orders above ₹299 in your birthday month.</p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">

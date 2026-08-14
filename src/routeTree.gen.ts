@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/menu'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
@@ -49,6 +50,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof AuthenticatedHomeRoute
   '/menu': typeof AuthenticatedMenuRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/profile': typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/home': typeof AuthenticatedHomeRoute
   '/menu': typeof AuthenticatedMenuRoute
   '/orders': typeof AuthenticatedOrdersRoute
+  '/profile': typeof AuthenticatedProfileRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/menu'
     | '/orders'
+    | '/profile'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/menu'
     | '/orders'
+    | '/profile'
   id:
     | '__root__'
     | '/'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/_authenticated/home'
     | '/_authenticated/menu'
     | '/_authenticated/orders'
+    | '/_authenticated/profile'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -195,6 +207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/orders': {
       id: '/_authenticated/orders'
       path: '/orders'
@@ -231,6 +250,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedMenuRoute: typeof AuthenticatedMenuRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -238,6 +258,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedMenuRoute: AuthenticatedMenuRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

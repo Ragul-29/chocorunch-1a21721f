@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -7,6 +7,7 @@ export type Profile = {
   full_name: string | null;
   mobile: string | null;
   email: string | null;
+  dob: string | null;
 };
 
 type AuthValue = {
@@ -17,6 +18,7 @@ type AuthValue = {
   displayName: string;
   initials: string;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthValue | null>(null);
@@ -40,24 +42,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const userId = session?.user.id;
 
-  useEffect(() => {
+  const loadProfile = useCallback(async () => {
     if (!userId) {
       setProfile(null);
       return;
     }
-    let active = true;
-    supabase
+    const { data } = await supabase
       .from("profiles")
-      .select("id, full_name, mobile, email")
+      .select("id, full_name, mobile, email, dob")
       .eq("id", userId)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (active) setProfile(data ?? null);
-      });
-    return () => {
-      active = false;
-    };
+      .maybeSingle();
+    setProfile(data ?? null);
   }, [userId]);
+
+  useEffect(() => {
+    void loadProfile();
+  }, [loadProfile]);
 
   const value = useMemo<AuthValue>(() => {
     const user = session?.user ?? null;
@@ -85,8 +85,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await supabase.auth.signOut();
         setProfile(null);
       },
+      refreshProfile: loadProfile,
     };
-  }, [session, profile, loading]);
+  }, [session, profile, loading, loadProfile]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
