@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useCart } from "./cart";
+import { useBirthday, BIRTHDAY_MIN_SUBTOTAL, BIRTHDAY_OFFER_LABEL } from "./birthday";
 
 export type Prize = {
   id: string;
@@ -164,16 +165,25 @@ export type Bill = {
   total: number;
   /** True when a prize is on hold because the subtotal dropped below ₹200. */
   rewardPaused: boolean;
+  /** Birthday coupon discount included in `discount`. */
+  birthdayDiscount: number;
+  /** Label shown when the birthday coupon is applied. */
+  birthdayLabel: string | null;
+  /** True when the coupon is available but the subtotal is still below ₹299. */
+  birthdayShort: number;
 };
 
 /** Single source of truth for the bill shown in cart, checkout, UPI and WhatsApp. */
 export function useBill(): Bill {
   const { items, subtotal } = useCart();
   const { prize, voucher, discountFor } = useReward();
+  const birthday = useBirthday();
 
   const qualifies = subtotal >= SPIN_MIN_SUBTOTAL;
   const rewardActive = !!prize && qualifies;
-  const discount = discountFor(subtotal);
+  const birthdayDiscount = birthday.discountFor(subtotal);
+  const spinDiscount = discountFor(subtotal);
+  const discount = Math.min(spinDiscount + birthdayDiscount, subtotal);
   const delivery = items.length ? DELIVERY_FEE : 0;
   const freeItem =
     rewardActive && (prize!.id === "dip" || prize!.id === "oreo")
@@ -189,5 +199,11 @@ export function useBill(): Bill {
     delivery,
     total: Math.max(0, subtotal - discount) + delivery,
     rewardPaused: !!prize && !qualifies,
+    birthdayDiscount,
+    birthdayLabel: birthdayDiscount > 0 ? BIRTHDAY_OFFER_LABEL : null,
+    birthdayShort:
+      birthday.available && birthday.applied && subtotal > 0 && subtotal < BIRTHDAY_MIN_SUBTOTAL
+        ? BIRTHDAY_MIN_SUBTOTAL - subtotal
+        : 0,
   };
 }
