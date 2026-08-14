@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      birthday_redemptions: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          order_code: string | null
+          period: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          order_code?: string | null
+          period: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          order_code?: string | null
+          period?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: string | null
@@ -68,6 +95,7 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          dob: string | null
           email: string | null
           full_name: string | null
           id: string
@@ -76,6 +104,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          dob?: string | null
           email?: string | null
           full_name?: string | null
           id: string
@@ -84,6 +113,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          dob?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
