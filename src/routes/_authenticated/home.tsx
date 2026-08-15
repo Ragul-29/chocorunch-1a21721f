@@ -175,9 +175,9 @@ function Index() {
           <img
             src={logoAsset.url}
             alt="Chocorunch"
-            className="h-14 w-14 rounded-full shadow ring-2 ring-white/70"
-            width={56}
-            height={56}
+            className="logo-3d h-16 w-16 rounded-full ring-2 ring-[var(--gold)]/70"
+            width={64}
+            height={64}
           />
           <p className="text-sm font-medium text-muted-foreground">
             © {new Date().getFullYear()} Chocorunch · Dip &amp; Crunch!
