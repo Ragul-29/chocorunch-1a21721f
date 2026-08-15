@@ -24,7 +24,7 @@ export const prizes: Prize[] = [
   { id: "pct20", label: "20% discount", short: "20% OFF", emoji: "🎉", color: "var(--peach)" },
   { id: "flat30", label: "₹30 instant discount", short: "₹30 OFF", emoji: "💸", color: "var(--mint)" },
   { id: "dip", label: "Free extra dip", short: "FREE DIP", emoji: "🍫", color: "var(--sky)" },
-  { id: "oreo", label: "Free Oreo topping", short: "FREE OREO", emoji: "🖤", color: "var(--pink)" },
+  { id: "dip2", label: "Free Dip", short: "FREE DIP", emoji: "🍫", color: "var(--pink)" },
   { id: "next40", label: "₹40 off next purchase", short: "₹40 NEXT", emoji: "🎁", color: "var(--caramel)" },
 ];
 
@@ -186,7 +186,7 @@ export function useBill(): Bill {
   const discount = Math.min(spinDiscount + birthdayDiscount, subtotal);
   const delivery = items.length ? DELIVERY_FEE : 0;
   const freeItem =
-    rewardActive && (prize!.id === "dip" || prize!.id === "oreo")
+    rewardActive && (prize!.id === "dip" || prize!.id === "dip2")
       ? { emoji: prize!.emoji, label: prize!.label }
       : null;
 

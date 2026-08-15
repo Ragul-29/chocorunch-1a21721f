@@ -41,8 +41,8 @@ function Menu() {
             Our Menu
           </h1>
           <p className="mt-3 font-medium text-muted-foreground">
-            Tap any product on the right to build it step by step — pick your dip,
-            add toppings and drop it in the cart.
+            Tap any product on the right to build it step by step — pick your dip
+            and drop it in the cart.
           </p>
         </div>
 
@@ -99,7 +99,6 @@ function Menu() {
                       basePrice: m.price,
                       mainCount: 0,
                       fixedMainId: m.id,
-                      toppingCount: 0,
                     })
                   }
                 >
@@ -136,12 +135,10 @@ function Menu() {
                 <ul className="mb-4 space-y-1.5 text-sm font-medium text-primary">
                   <li>✓ Choose any {b.mainCount} main items</li>
                   <li>✓ Choose 1 chocolate dip</li>
-                  <li>✓ Add up to {b.toppingCount} toppings</li>
                 </ul>
                 <div className="mt-auto flex items-center justify-between pt-2">
                   <span className="font-display text-2xl font-extrabold text-primary">
                     {formatINR(b.price)}
-                    <span className="ml-1 text-sm font-bold text-primary/70">+ toppings</span>
                   </span>
                   <Button
                     className="btn-3d gap-1 rounded-full font-bold"
@@ -152,7 +149,6 @@ function Menu() {
                         emoji: b.emoji,
                         basePrice: b.price,
                         mainCount: b.mainCount,
-                        toppingCount: b.toppingCount,
                       })
                     }
                   >

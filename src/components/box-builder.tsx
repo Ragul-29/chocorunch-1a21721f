@@ -14,12 +14,10 @@ import {
   dips,
   mainItems,
   miniBoxItems,
-  toppings,
   formatINR,
   type Choice,
   type MainItem,
   type Product,
-  type Topping,
 } from "@/lib/products";
 
 export type BuilderConfig = {
@@ -31,11 +29,9 @@ export type BuilderConfig = {
   mainCount: number;
   /** For single products: the pre-selected main item id. */
   fixedMainId?: string;
-  /** Number of toppings the user may pick. 0 = skip toppings step. */
-  toppingCount: number;
 };
 
-type StepKind = "mains" | "dip" | "toppings" | "review";
+type StepKind = "mains" | "dip" | "review";
 
 function toggle<T extends { id: string }>(list: T[], item: T, max: number): T[] {
   const exists = list.some((x) => x.id === item.id);
@@ -57,14 +53,12 @@ export function BoxBuilder({
   const [step, setStep] = useState(0);
   const [mains, setMains] = useState<MainItem[]>([]);
   const [dip, setDip] = useState<Choice | null>(null);
-  const [tops, setTops] = useState<Topping[]>([]);
 
   const steps = useMemo<StepKind[]>(() => {
     if (!config) return [];
     const s: StepKind[] = [];
     if (config.mainCount > 0) s.push("mains");
     s.push("dip");
-    if (config.toppingCount > 0) s.push("toppings");
     s.push("review");
     return s;
   }, [config]);
@@ -75,7 +69,6 @@ export function BoxBuilder({
     setStep(0);
     setMains([]);
     setDip(null);
-    setTops([]);
   };
 
   const handleOpenChange = (o: boolean) => {
@@ -86,8 +79,7 @@ export function BoxBuilder({
   const current = steps[step];
   const isLast = step === steps.length - 1;
 
-  const toppingTotal = tops.reduce((sum, t) => sum + t.price, 0);
-  const total = config.basePrice + toppingTotal;
+  const total = config.basePrice;
 
   const canAdvance = (() => {
     switch (current) {
@@ -95,8 +87,6 @@ export function BoxBuilder({
         return mains.length === config.mainCount;
       case "dip":
         return dip !== null;
-      case "toppings":
-        return tops.length > 0;
       default:
         return true;
     }
@@ -107,7 +97,6 @@ export function BoxBuilder({
     const parts = [
       ...(mainList.length ? [`Items: ${mainList.join(", ")}`] : []),
       dip ? `Dip: ${dip.name}` : "",
-      tops.length ? `Toppings: ${tops.map((t) => t.name).join(", ")}` : "",
     ].filter(Boolean);
 
     const product: Product = {
@@ -125,7 +114,6 @@ export function BoxBuilder({
   const stepTitle: Record<StepKind, string> = {
     mains: `Choose any ${config.mainCount} main items`,
     dip: "Choose 1 chocolate dip",
-    toppings: `Choose up to ${config.toppingCount} toppings`,
     review: "Review your creation",
   };
 
@@ -218,38 +206,6 @@ export function BoxBuilder({
             </div>
           )}
 
-          {current === "toppings" && (
-            <>
-              <p className="mb-3 text-center text-xs font-bold text-muted-foreground">
-                {tops.length} / {config.toppingCount} selected
-              </p>
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
-                {toppings.map((t) => {
-                  const active = tops.some((x) => x.id === t.id);
-                  return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => setTops((prev) => toggle(prev, t, config.toppingCount))}
-                      className={`chip-3d relative flex flex-col items-center gap-1 rounded-2xl p-3 text-center ${
-                        active ? "ring-2 ring-primary" : ""
-                      }`}
-                      style={{ backgroundColor: t.color }}
-                    >
-                      {active && (
-                        <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                          <Check className="h-3 w-3" />
-                        </span>
-                      )}
-                      <span className="text-2xl">{t.emoji}</span>
-                      <span className="text-[11px] font-bold leading-tight text-foreground">{t.name}</span>
-                      <span className="text-[10px] font-bold text-primary">+{formatINR(t.price)}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
 
           {current === "review" && (
             <div className="clay tilt-3d mx-auto max-w-md space-y-4 p-6">
@@ -269,15 +225,6 @@ export function BoxBuilder({
                 <div>
                   <p className="text-xs font-bold uppercase text-muted-foreground">Dip</p>
                   <p className="font-medium">{dip.emoji} {dip.name}</p>
-                </div>
-              )}
-              {tops.length > 0 && (
-                <div>
-                  <p className="text-xs font-bold uppercase text-muted-foreground">Toppings</p>
-                  <p className="font-medium">{tops.map((t) => t.name).join(", ")}</p>
-                  <p className="text-sm font-semibold text-muted-foreground">
-                    Toppings add-on: +{formatINR(toppingTotal)}
-                  </p>
                 </div>
               )}
               <div className="flex items-center justify-between border-t border-border pt-3">
