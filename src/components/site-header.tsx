@@ -38,9 +38,9 @@ export function SiteHeader() {
           <img
             src={logoAsset.url}
             alt="Chocorunch"
-            className="h-11 w-11 rounded-full object-cover shadow-md ring-2 ring-white/70"
-            width={44}
-            height={44}
+            className="logo-3d h-13 w-13 rounded-full object-cover ring-2 ring-[var(--gold)]/70"
+            width={52}
+            height={52}
           />
           <span className="font-display text-2xl font-extrabold tracking-tight text-primary">
             Chocorunch

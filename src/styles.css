@@ -47,6 +47,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-gold: var(--gold);
   --color-ring-offset-background: var(--background);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
@@ -65,30 +66,32 @@
 
 :root {
   --radius: 1.25rem;
-  --background: oklch(0.965 0.022 62);
-  --foreground: oklch(0.34 0.052 52);
-  --card: oklch(0.99 0.012 78);
-  --card-foreground: oklch(0.34 0.052 52);
-  --popover: oklch(0.99 0.012 78);
-  --popover-foreground: oklch(0.34 0.052 52);
-  --primary: oklch(0.44 0.078 52);
-  --primary-foreground: oklch(0.98 0.015 80);
+  --background: oklch(0.972 0.016 76);
+  --foreground: oklch(0.27 0.045 48);
+  --card: oklch(0.995 0.008 85);
+  --card-foreground: oklch(0.27 0.045 48);
+  --popover: oklch(0.995 0.008 85);
+  --popover-foreground: oklch(0.27 0.045 48);
+  --primary: oklch(0.31 0.06 46);
+  --primary-foreground: oklch(0.98 0.014 84);
   --secondary: oklch(0.86 0.06 165);
   --secondary-foreground: oklch(0.35 0.05 130);
-  --muted: oklch(0.93 0.026 60);
-  --muted-foreground: oklch(0.52 0.04 55);
+  --muted: oklch(0.94 0.02 74);
+  --muted-foreground: oklch(0.5 0.035 52);
   --accent: oklch(0.87 0.05 230);
   --accent-foreground: oklch(0.36 0.06 250);
   --destructive: oklch(0.62 0.16 25);
   --destructive-foreground: oklch(0.99 0.01 80);
-  --border: oklch(0.9 0.028 62);
-  --input: oklch(0.9 0.028 62);
-  --ring: oklch(0.75 0.08 165);
+  --border: oklch(0.905 0.022 76);
+  --input: oklch(0.905 0.022 76);
+  --ring: oklch(0.76 0.09 84);
   /* Playful accent tokens for the 3D / clay look */
   --peach: oklch(0.91 0.045 45);
   --mint: oklch(0.86 0.06 165);
   --sky: oklch(0.87 0.05 230);
-  --caramel: oklch(0.85 0.09 78);
+  --caramel: oklch(0.86 0.075 80);
+  /* Premium gold accent */
+  --gold: oklch(0.79 0.105 86);
   --pink: oklch(0.82 0.09 22);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -151,9 +154,9 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     background-image:
-      radial-gradient(circle at 12% 18%, color-mix(in oklab, var(--mint) 55%, transparent) 0, transparent 42%),
-      radial-gradient(circle at 88% 12%, color-mix(in oklab, var(--sky) 50%, transparent) 0, transparent 40%),
-      radial-gradient(circle at 50% 100%, color-mix(in oklab, var(--peach) 60%, transparent) 0, transparent 55%);
+      radial-gradient(circle at 12% 16%, color-mix(in oklab, var(--gold) 26%, transparent) 0, transparent 42%),
+      radial-gradient(circle at 88% 10%, color-mix(in oklab, var(--caramel) 30%, transparent) 0, transparent 40%),
+      radial-gradient(circle at 50% 100%, color-mix(in oklab, var(--primary) 12%, transparent) 0, transparent 58%);
     background-attachment: fixed;
   }
 
@@ -166,11 +169,13 @@
 /* ---- 3D / claymorphism helpers ---- */
 @utility clay {
   background: var(--color-card);
-  border-radius: 1.75rem;
+  border-radius: 1.85rem;
+  border: 1px solid color-mix(in oklab, var(--gold) 26%, transparent);
   box-shadow:
-    0 1px 0 1px color-mix(in oklab, var(--foreground) 6%, transparent),
-    0 18px 30px -12px color-mix(in oklab, var(--primary) 30%, transparent),
-    inset 0 2px 0 0 color-mix(in oklab, white 70%, transparent);
+    0 1px 2px 0 color-mix(in oklab, var(--foreground) 5%, transparent),
+    0 10px 22px -12px color-mix(in oklab, var(--primary) 26%, transparent),
+    0 26px 48px -22px color-mix(in oklab, var(--primary) 24%, transparent),
+    inset 0 1px 0 0 color-mix(in oklab, white 80%, transparent);
 }
 
 @utility clay-pop {
@@ -185,10 +190,30 @@
 }
 
 @utility btn-3d {
-  box-shadow: 0 6px 0 0 color-mix(in oklab, var(--primary) 60%, black 22%);
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-  &:hover { transform: translateY(-1px); box-shadow: 0 7px 0 0 color-mix(in oklab, var(--primary) 60%, black 22%); }
-  &:active { transform: translateY(4px); box-shadow: 0 2px 0 0 color-mix(in oklab, var(--primary) 60%, black 22%); }
+  box-shadow:
+    0 5px 0 0 color-mix(in oklab, var(--primary) 55%, black 30%),
+    0 12px 22px -12px color-mix(in oklab, var(--primary) 55%, transparent);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow:
+      0 7px 0 0 color-mix(in oklab, var(--primary) 55%, black 30%),
+      0 18px 28px -12px color-mix(in oklab, var(--primary) 60%, transparent);
+  }
+  &:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 0 color-mix(in oklab, var(--primary) 55%, black 30%);
+  }
+}
+
+/* Premium 3D depth for the Chocorunch logo mark */
+@utility logo-3d {
+  filter:
+    drop-shadow(0 6px 10px color-mix(in oklab, var(--primary) 40%, transparent))
+    drop-shadow(0 14px 28px color-mix(in oklab, var(--primary) 28%, transparent));
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  &:hover { transform: translateY(-3px) scale(1.03); }
 }
 
 @keyframes float-y {

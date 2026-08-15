@@ -74,9 +74,9 @@ function LoginLanding() {
               <img
                 src={logoAsset.url}
                 alt="Chocorunch"
-                width={176}
-                height={176}
-                className="float-3d relative h-36 w-36 rounded-full object-cover shadow-2xl ring-4 ring-white/80 sm:h-44 sm:w-44"
+                width={208}
+                height={208}
+                className="float-3d logo-3d relative h-40 w-40 rounded-full object-cover ring-4 ring-[var(--gold)]/70 sm:h-52 sm:w-52"
               />
             </div>
             <div>
