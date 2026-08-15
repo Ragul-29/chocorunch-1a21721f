@@ -66,9 +66,9 @@ function ExploreMenuButton({ label = "Explore Menu" }: { label?: string }) {
             <img
               src={logoAsset.url}
               alt="Chocorunch"
-              width={96}
-              height={96}
-              className="float-3d h-24 w-24 rounded-full object-cover shadow-xl ring-4 ring-white/80"
+              width={112}
+              height={112}
+              className="float-3d logo-3d h-28 w-28 rounded-full object-cover ring-4 ring-[var(--gold)]/70"
             />
             <DialogTitle className="font-display text-2xl font-extrabold">Log in to continue</DialogTitle>
             <DialogDescription>Sign in and we&apos;ll take you straight to the menu.</DialogDescription>
@@ -104,9 +104,9 @@ function Index() {
             <img
               src={logoAsset.url}
               alt="Chocorunch — Dip & Crunch"
-              width={420}
-              height={420}
-              className="float-3d relative w-full max-w-sm rounded-full shadow-2xl ring-4 ring-white/70"
+              width={480}
+              height={480}
+              className="float-3d logo-3d relative w-full max-w-md rounded-full ring-4 ring-[var(--gold)]/70"
             />
           </div>
 
@@ -175,9 +175,9 @@ function Index() {
           <img
             src={logoAsset.url}
             alt="Chocorunch"
-            className="h-14 w-14 rounded-full shadow ring-2 ring-white/70"
-            width={56}
-            height={56}
+            className="logo-3d h-16 w-16 rounded-full ring-2 ring-[var(--gold)]/70"
+            width={64}
+            height={64}
           />
           <p className="text-sm font-medium text-muted-foreground">
             © {new Date().getFullYear()} Chocorunch · Dip &amp; Crunch!

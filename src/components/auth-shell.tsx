@@ -30,9 +30,9 @@ export function AuthShell({
             <img
               src={logoAsset.url}
               alt="Chocorunch"
-              className="float-3d h-20 w-20 rounded-full object-cover shadow-lg ring-4 ring-white/70"
-              width={80}
-              height={80}
+              className="float-3d logo-3d h-24 w-24 rounded-full object-cover ring-4 ring-[var(--gold)]/70"
+              width={96}
+              height={96}
             />
             <span className="font-display text-2xl font-extrabold tracking-tight text-primary">
               Chocorunch
