@@ -138,12 +138,18 @@ export function SpinWheelCard() {
                 {prizes.map((p, i) => (
                   <span
                     key={p.id}
-                    className="wheel-label text-[10px] font-bold uppercase tracking-tight text-center leading-tight"
+                    className="wheel-label font-extrabold uppercase tracking-tight text-center leading-tight"
                     style={{
                       transform: `rotate(${i * SEG + SEG / 2}deg) translateY(-36%)`,
-                      textShadow: '0 1px 2px rgba(0,0,0,0.25)',
+                      fontSize: "0.7rem",
+                      width: "5.5rem",
+                      color: "#3a1f12",
+                      textShadow: "0 1px 1px rgba(255,255,255,0.55)",
+                      whiteSpace: "pre-line",
                     }}
                   >
+                    {p.emoji}
+                    {"\n"}
                     {p.short}
                   </span>
                 ))}
