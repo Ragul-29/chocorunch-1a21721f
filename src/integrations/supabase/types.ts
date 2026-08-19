@@ -94,6 +94,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          choco_points: number
           created_at: string
           dob: string | null
           email: string | null
@@ -103,6 +104,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          choco_points?: number
           created_at?: string
           dob?: string | null
           email?: string | null
@@ -112,6 +114,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          choco_points?: number
           created_at?: string
           dob?: string | null
           email?: string | null
