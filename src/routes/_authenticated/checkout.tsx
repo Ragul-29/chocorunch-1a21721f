@@ -46,8 +46,7 @@ function Checkout() {
   const { rewardLines, consumeForOrder } = useReward();
   const { discount, delivery, total, freeItem, rewardLabel, rewardPaused, birthdayDiscount, birthdayShort } = useBill();
   const birthday = useBirthday();
-  const { user, profile, displayName } = useAuth();
-  const { refreshProfile } = useAuth();
+  const { user, profile, displayName, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<PayMethod>("gpay");
