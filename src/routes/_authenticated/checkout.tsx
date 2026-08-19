@@ -46,7 +46,7 @@ function Checkout() {
   const { rewardLines, consumeForOrder } = useReward();
   const { discount, delivery, total, freeItem, rewardLabel, rewardPaused, birthdayDiscount, birthdayShort } = useBill();
   const birthday = useBirthday();
-  const { user, profile, displayName } = useAuth();
+  const { user, profile, displayName, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<PayMethod>("gpay");
@@ -78,6 +78,11 @@ function Checkout() {
     const orderId = `CR${Date.now().toString().slice(-6)}`;
     const rewards = rewardLines(subtotal);
 
+    // Choco Points: ₹100 of eligible product spend = 10 points. Delivery is excluded.
+    const eligibleAmount = Math.max(0, total - delivery);
+    const expectedPoints = Math.floor(eligibleAmount / 100) * 10;
+    let earnedPoints = 0;
+
     // Lock the birthday coupon for this birthday month so a refresh or re-login can't reuse it.
     if (birthdayDiscount > 0) {
       await birthday.markRedeemed(orderId, birthdayDiscount);
@@ -105,6 +110,16 @@ function Checkout() {
         address: `${address}, ${city} - ${pincode}`,
       });
       if (saveError) console.error("Could not save order history", saveError);
+
+      // Award points once per order — the database guards against double credit.
+      if (!saveError && expectedPoints > 0) {
+        const { data: awarded, error: pointsError } = await supabase.rpc("award_choco_points", {
+          _order_code: orderId,
+          _eligible_amount: eligibleAmount,
+        });
+        if (pointsError) console.error("Could not award Choco Points", pointsError);
+        else earnedPoints = awarded ?? 0;
+      }
     }
 
     const message =
@@ -117,6 +132,7 @@ function Checkout() {
       (discount ? `Reward discount: -${formatINR(discount)}\n` : "") +
       `Delivery: ${formatINR(delivery)}\n` +
       `*Total: ${formatINR(total)}*\n\n` +
+      (earnedPoints > 0 ? `🍫 Choco Points earned: ${earnedPoints}\n\n` : "") +
       (rewards.length ? `*Rewards:*\n${rewards.join("\n")}\n\n` : "") +
       `*Payment:* ${methodLabel}\n\n` +
       `*Customer:*\n${name}\n${phone}\n${email}\n\n` +
@@ -139,6 +155,10 @@ function Checkout() {
       window.open(waUrl, "_blank", "noopener,noreferrer");
       setSubmitting(false);
       toast.success("Order sent! Confirm it in WhatsApp to complete.");
+      if (earnedPoints > 0) {
+        toast.success(`🎉 You earned ${earnedPoints} Choco Points!`);
+        void refreshProfile();
+      }
       consumeForOrder();
       clear();
       navigate({ to: "/home" });
