@@ -8,6 +8,7 @@ export type Profile = {
   mobile: string | null;
   email: string | null;
   dob: string | null;
+  choco_points: number;
 };
 
 type AuthValue = {
@@ -49,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const { data } = await supabase
       .from("profiles")
-      .select("id, full_name, mobile, email, dob")
+      .select("id, full_name, mobile, email, dob, choco_points")
       .eq("id", userId)
       .maybeSingle();
     setProfile(data ?? null);
