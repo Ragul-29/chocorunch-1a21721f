@@ -53,6 +53,7 @@ export type Database = {
           items: Json
           order_code: string
           payment_method: string
+          points_earned: number
           reward_label: string | null
           subtotal: number
           total: number
@@ -69,6 +70,7 @@ export type Database = {
           items?: Json
           order_code: string
           payment_method?: string
+          points_earned?: number
           reward_label?: string | null
           subtotal?: number
           total?: number
@@ -85,6 +87,7 @@ export type Database = {
           items?: Json
           order_code?: string
           payment_method?: string
+          points_earned?: number
           reward_label?: string | null
           subtotal?: number
           total?: number
@@ -130,7 +133,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_choco_points: {
+        Args: { _eligible_amount: number; _order_code: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
