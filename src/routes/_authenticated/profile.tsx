@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Cake, Loader2 } from "lucide-react";
+import { Cake, Loader2, Star } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { BirthdayBanner } from "@/components/birthday-banner";
@@ -49,6 +49,23 @@ function ProfilePage() {
         <h1 className="font-display text-4xl font-extrabold tracking-tight text-primary">My profile</h1>
 
         <BirthdayBanner />
+
+        <section className="clay relative overflow-hidden rounded-3xl bg-primary p-6 text-primary-foreground shadow-xl">
+          <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-primary-foreground/10 blur-2xl" />
+          <div className="absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-primary-foreground/10 blur-2xl" />
+          <div className="relative flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-foreground/20 shadow-inner">
+              <Star className="h-7 w-7 fill-yellow-300 text-yellow-300" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-primary-foreground/80">Your Choco Points</p>
+              <p className="font-display text-3xl font-extrabold tracking-tight">🍫 {profile?.choco_points ?? 0}</p>
+            </div>
+          </div>
+          <p className="relative mt-3 text-xs font-medium text-primary-foreground/70">
+            Earn more points with every order and redeem them on future treats.
+          </p>
+        </section>
 
         <section className="clay space-y-4 p-6">
           <div className="grid gap-4 sm:grid-cols-2">
