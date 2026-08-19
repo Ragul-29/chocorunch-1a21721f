@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Cake, Loader2 } from "lucide-react";
+import { Cake, Loader2, Star } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { BirthdayBanner } from "@/components/birthday-banner";
